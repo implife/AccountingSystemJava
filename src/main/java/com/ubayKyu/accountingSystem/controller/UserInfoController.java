@@ -48,12 +48,6 @@ public class UserInfoController {
 	public List<UserInfo> findAllClient() {
 		return service.getUserInfos();
 	}
-
-	@GetMapping("/")
-	public String sayHello(Model model) {
-		model.addAttribute("message", "Hello System.");
-		return "index";
-	}
 	
 	@PostMapping("/login")
 	public void login(@ModelAttribute User user) {

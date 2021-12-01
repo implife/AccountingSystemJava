@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8" />
+
+    <title>Login</title>
+
+    <link rel="stylesheet" href="../static/stylesheet/bootstrap.min.css">
+    <script src="../static/script/bootstrap.min.js"></script>
+    <script src="../static/script/jquery-3.6.0.min.js"></script>
+    <style>
+        h1 {
+            text-align: center;
+            padding: 8px 0px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+        }
+
+        form>div {
+            width: 360px;
+            padding: 15px 20px;
+        }
+
+        .btn-div {
+            display: flex;
+            justify-content: center;
+        }
+
+        label {
+            width: 80px !important;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>流水帳管理系統</h1>
+    <form action="login" method="post" class="mt-5">
+        <div>
+            <div class="mb-3 row">
+                <label for="account" class="col-form-label">Account</label>
+                <div class="col">
+                    <input type="text" class="form-control" id="account" name="account">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="password" class="col-form-label">Password</label>
+                <div class="col">
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+            </div>
+            <div class="btn-div">
+                <button type="button" class="btn btn-outline-primary">Login</button>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

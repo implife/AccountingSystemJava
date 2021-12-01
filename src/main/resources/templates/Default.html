@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8" />
+
+    <title>Default</title>
+
+    <link rel="stylesheet" href="../static/stylesheet/bootstrap.min.css">
+    <script src="../static/script/bootstrap.min.js"></script>
+    <script src="../static/script/jquery-3.6.0.min.js"></script>
+
+    <style>
+        h1 {
+            text-align: center;
+            padding: 8px 0px;
+        }
+
+        .login_div {
+            position: fixed;
+            display: inline-block;
+            right: 3%;
+            top: 15px;
+        }
+
+        tr > td:first-child {
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>流水帳管理系統</h1>
+    <div class="login_div"><a href="loginPage">登入系統</a></div>
+    <div class="offset-4 col-4 mt-5">
+        <table class="table">
+            <tr scope="row">
+                <td>初次記帳</td>
+                <td>2021/07/01 23:51:00</td>
+            </tr>
+            <tr scope="row">
+                <td>最後記帳</td>
+                <td>2021/07/01 23:51:00</td>
+            </tr>
+            <tr scope="row">
+                <td>記帳數量</td>
+                <td>共 48 筆</td>
+            </tr>
+            <tr scope="row">
+                <td>會員數</td>
+                <td>共 6 人</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>
