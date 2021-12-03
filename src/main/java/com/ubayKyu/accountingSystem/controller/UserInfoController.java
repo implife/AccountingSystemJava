@@ -26,12 +26,20 @@ public class UserInfoController {
 	private UserInfoService service;
 
 	@GetMapping("/getall")
-	public List<User> getAllUserInfo(){
-		return Arrays.asList(
-			new User("Jack", "123"),
-			new User("Martin", "asdzxc"),
-			new User("Tom", "12345678")
-		);
+	public String getAllUserInfo(Model model){
+		List<UserInfo> userInfos = service.getUserInfos();
+		String msg = "";
+		for(UserInfo item: userInfos){
+			System.out.println("Account: " + item.account);
+			System.out.println("Name: " + item.name);
+			System.out.println("Email: " + item.email);
+			System.out.println("Create Date: " + item.createDate);
+			System.out.println("User Level: " + item.userLevel);
+			System.out.println("-------------------");
+			msg += item.name + ", ";
+		}
+		model.addAttribute("message", msg);
+		return "Default";
 	}
 
 	@GetMapping("/getpara/{id}")

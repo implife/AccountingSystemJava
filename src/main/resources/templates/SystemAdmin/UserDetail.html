@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>流水帳分類管理</title>
+    <title>會員管理</title>
 
     <link href="../../static/stylesheet/admin.css" rel="stylesheet" />
 
@@ -30,26 +30,23 @@
             padding-left: 50px;
         }
 
-        .category-table-div {
-            min-width: 400px;
-            max-width: 75%;
-            min-height: 350px;
+        .user-edit-div {
+            max-width: 350px;
         }
 
-        tr > th:first-child {
-            width: 50px;
-            padding-left: 20px;
+        .user-edit-div label {
+            width: 90px;
+            text-align: right;
         }
 
-        .ucPager-div {
-            min-width: 400px;
-            max-width: 75%;
-            display: flex;
-            justify-content: center;
+        .readonly-content {
+            padding-top: calc(0.375rem + 1px);
+            padding-bottom: calc(0.375rem + 1px);
         }
 
-        .ucPager-div>nav {
-            margin: 0 auto;
+        #btnSave {
+            margin-left: 20px;
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -92,7 +89,7 @@
                     <div class="nav">
 
                         <div class="sb-sidenav-menu-heading"><i class="fas fa-folder-open"></i>管理者後台</div>
-                        <a class="nav-link" href="UserList.html">
+                        <a class="nav-link active" href="UserList.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             會員管理
                         </a>
@@ -108,7 +105,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
                             流水帳管理
                         </a>
-                        <a class="nav-link active" href="CategoryList.html">
+                        <a class="nav-link" href="CategoryList.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             流水帳分類管理
                         </a>
@@ -119,81 +116,60 @@
         </div>
         <div id="layoutSidenav_content">
             <div class="pageContent">
-                <h4>流水帳分類管理</h4>
+                <h4>會員管理</h4>
 
                 <!-- bread crumb -->
                 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
                     aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">流水帳紀錄</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">流水帳分類管理</li>
+                        <li class="breadcrumb-item"><a href="#">管理者後台</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">會員管理</li>
                     </ol>
                 </nav>
 
-                <!-- Add & Delete button -->
-                <div>
-                    <button type="button" class="btn btn-outline-success">Add</button>
-                    <button type="button" class="btn btn-outline-danger">Delete</button>
-                </div>
-
-                <!-- Table -->
-                <div class="category-table-div">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col"><i class="fas fa-trash"></i></th>
-                                <th scope="col">建立日期</th>
-                                <th scope="col">分類</th>
-                                <th scope="col">流水帳數</th>
-                                <th scope="col">Act</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                                    </div>
-                                </th>
-                                <td>2021/7/5</td>
-                                <td>我的分類1</td>
-                                <td>4</td>
-                                <td><a href="#">Edit</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                    </div>
-                                </th>
-                                <td>2021/7/5</td>
-                                <td>我的分類2</td>
-                                <td>2</td>
-                                <td><a href="#">Edit</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- pagination -->
-                <div class="ucPager-div">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                <!-- Input -->
+                <div class="user-edit-div">
+                    <div class="mb-3 row">
+                        <label for="account" class="col-form-label">帳號</label>
+                        <div class="col-auto readonly-content">
+                            Moudou
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="name" class="col-form-label">姓名</label>
+                        <div class="col-auto">
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="email" class="col-form-label">Email</label>
+                        <div class="col-auto">
+                            <input type="text" class="form-control" id="email" name="email">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="level" class="col-form-label">等級</label>
+                        <div class="col-auto pt-1">
+                            <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
+                                <option valur="general" selected>一般會員</option>
+                                <option value="manager">管理者</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="amount" class="col-form-label">建立時間</label>
+                        <div class="col-auto readonly-content">
+                            2021/7/2 03:04:05
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="caption" class="col-form-label">修改時間</label>
+                        <div class="col-auto readonly-content">
+                            2021/7/3 10:15:05
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary" id="btnSave">Save</button>
+                    <button type="button" class="btn btn-outline-danger" id="btnDelete">Delete</button>
                 </div>
             </div>
         </div>
