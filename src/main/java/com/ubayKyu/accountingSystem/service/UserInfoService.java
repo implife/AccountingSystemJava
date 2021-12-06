@@ -13,6 +13,14 @@ public class UserInfoService {
 	@Autowired
 	private UserInfoRepository repository;
 	
+
+	public int getTotalCount(){
+		return repository.findAll().size();
+	}
+
+
+
+
 	public List<UserInfo> getUserInfos(){
 		return repository.findAll();
 	}

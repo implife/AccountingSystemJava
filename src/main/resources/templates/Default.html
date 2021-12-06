@@ -38,19 +38,19 @@
         <table class="table">
             <tr scope="row">
                 <td>初次記帳</td>
-                <td>2021/07/01 23:51:00</td>
+                <td th:text="${firstAccount}"></td>
             </tr>
             <tr scope="row">
                 <td>最後記帳</td>
-                <td>2021/07/01 23:51:00</td>
+                <td th:text="${lastAccount}"></td>
             </tr>
             <tr scope="row">
                 <td>記帳數量</td>
-                <td>共 48 筆</td>
+                <td>共 <span th:text="${accountingTotalCount}"></span> 筆</td>
             </tr>
             <tr scope="row">
                 <td>會員數</td>
-                <td>共 6 人</td>
+                <td>共 <span th:text="${userTotalCount}"></span> 人</td>
             </tr>
         </table>
     </div>
