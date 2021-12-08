@@ -6,9 +6,7 @@
 
     <title>Default</title>
 
-    <link rel="stylesheet" th:href="@{/stylesheet/bootstrap.min.css}">
-    <script src="../static/script/bootstrap.min.js"></script>
-    <script src="../static/script/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/stylesheet/bootstrap.min.css">
 
     <style>
         h1 {
@@ -33,7 +31,10 @@
 
 <body>
     <h1>流水帳管理系統</h1>
-    <div class="login_div"><a href="loginPage">登入系統</a></div>
+    <div class="login_div">
+        <a th:if="${!isLogin}" th:href="@{/loginPage}">登入系統</a>
+        <a th:if="${isLogin}" th:href="@{/userProfile}">後台管理</a>
+    </div>
     <div class="offset-4 col-4 mt-5">
         <table class="table">
             <tr scope="row">

@@ -6,9 +6,7 @@
 
     <title>Login</title>
 
-    <link rel="stylesheet" href="../static/stylesheet/bootstrap.min.css">
-    <script src="../static/script/bootstrap.min.js"></script>
-    <script src="../static/script/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/stylesheet/bootstrap.min.css">
     <style>
         h1 {
             text-align: center;
@@ -33,28 +31,38 @@
         label {
             width: 80px !important;
         }
+
+        .err-msg {
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: .875em;
+            color: #dc3545;
+        }
     </style>
 
 </head>
 
 <body>
     <h1>流水帳管理系統</h1>
-    <form action="login" method="post" class="mt-5">
+
+    <form th:action="@{/login}" method="post" class="mt-5" th:object="${userLoginDto}">
         <div>
             <div class="mb-3 row">
                 <label for="account" class="col-form-label">Account</label>
                 <div class="col">
-                    <input type="text" class="form-control" id="account" name="account">
+                    <input type="text" class="form-control" th:field="*{account}">
+                    <div class="err-msg" th:each="error: ${#fields.errors('account')}" th:text="${error}"></div>
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="password" class="col-form-label">Password</label>
+                <label for="password" class="col-form-label">PWD</label>
                 <div class="col">
-                    <input type="password" class="form-control" id="password" name="password">
+                    <input type="password" class="form-control" th:field="*{password}">
+                    <div class="err-msg" th:each="error: ${#fields.errors('password')}" th:text="${error}"></div>
                 </div>
             </div>
             <div class="btn-div">
-                <button type="button" class="btn btn-outline-primary">Login</button>
+                <button type="submit" class="btn btn-outline-primary">Login</button>
             </div>
         </div>
     </form>
