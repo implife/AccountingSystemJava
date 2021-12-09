@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import com.ubayKyu.accountingSystem.dto.UserLoginDto;
 import com.ubayKyu.accountingSystem.service.UserInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,12 @@ public class UserProfileController {
     private UserInfoService userInfoService;
 
     @RequestMapping("/userProfile")
-    public String userProfilePage(HttpSession session,Model model) {
+    public String userProfilePage(HttpSession session, Model model) {
         
         UUID uuid = (UUID)session.getAttribute("LoginID");
 
         if(uuid == null){
-            model.addAttribute("userLoginDto", new UserLoginDto());
-            return "Login";
+            return "redirect:/loginPage";
         }
 
         model.addAttribute("isManager", userInfoService.isManager(uuid));

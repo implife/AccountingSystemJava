@@ -34,19 +34,4 @@ public class UserInfoService {
 		return isManager;
 	}
 
-
-
-
-
-	
-
-
-	public List<UserInfo> getUserInfos(){
-		return repository.findAll();
-	}
-	
-	//test
-	public UserInfo saveUserInfo(UserInfo UserInfo) {
-		return repository.save(UserInfo);
-	}
 }
