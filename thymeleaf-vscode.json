@@ -1,0 +1,123 @@
+{
+    "tags": [
+  
+    ],
+    "globalAttributes": [
+      {
+        "name": "th:text",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:field",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:each",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:object",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:href",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:if",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:switch",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:case",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:value",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:insert",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:replace",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:fragment",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:unless",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:with",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:class",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:id",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:action",
+        "description": "X attributes",
+        "valueSet": "thymeleaf"
+      }
+  
+    ],
+    "valueSets": [
+      {
+        "name": "thymeleaf",
+        "values": [
+          {
+            "name": "${}",
+            "description": "variable expression"
+          },
+          {
+            "name": "@{}",
+            "description": "Link URL Expressions"
+          },
+          {
+            "name": "*{}",
+            "description": "Selection Variable Expressions"
+          },
+          {
+            "name": "#{}",
+            "description": "Message Expressions"
+          },
+          {
+            "name": "~{}",
+            "description": "Fragment Expressions"
+          }
+          
+          
+  
+        ]
+      }
+    ]
+  }

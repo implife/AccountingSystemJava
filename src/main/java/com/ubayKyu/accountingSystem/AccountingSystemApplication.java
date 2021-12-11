@@ -15,6 +15,7 @@ public class AccountingSystemApplication {
 		SpringApplication.run(AccountingSystemApplication.class, args);
 	}
 
+	// 引用外部錯誤訊息檔案
 	@Bean
 	public MessageSource messageSource(){
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();

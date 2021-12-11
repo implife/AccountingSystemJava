@@ -1,0 +1,25 @@
+.sb-sidenav-menu-heading {
+    font-size: .9rem !important;
+}
+
+.sb-nav-link-icon {
+    padding-left: 10px;
+    color: inherit !important;
+}
+
+#user-logout-btn:hover {
+    color: #fff;
+}
+
+.nav-link.logout_manager {
+    color: #ffc107 !important;
+}
+
+.nav-link.logout_manager:hover {
+    color: #ffd199 !important;
+}
+
+.pageContent {
+    padding-top: 20px;
+    padding-left: 50px;
+}
