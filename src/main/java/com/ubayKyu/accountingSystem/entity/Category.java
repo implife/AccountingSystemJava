@@ -19,13 +19,13 @@ public class Category {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "category_id", updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
+    @Column(name = "category_id", insertable = false, updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
     public UUID categoryID;
 
 	@Column(name = "category_name", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
     public String categoryName;
 
-	@Column(name = "create_date", nullable=false, unique=false, columnDefinition = "datetime")
+	@Column(name = "create_date", nullable=false, unique=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
     public LocalDateTime createDate;
 
 	@Column(name = "remark", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")

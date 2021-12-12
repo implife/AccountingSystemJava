@@ -1,6 +1,7 @@
 package com.ubayKyu.accountingSystem.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class UserInfoService {
 
 	public int getTotalCount(){
 		return repository.findAll().size();
+	}
+
+	public Optional<UserInfo> getUserById(UUID uuid){
+		return repository.findById(uuid);
 	}
 
 	public UserInfo getUserByAccountPwd(String account, String pwd){

@@ -127,7 +127,7 @@
                             </li>
                             <li class="page-item">
                                 <a class="page-link" th:href="*{currentPage == 1} ? '#' : @{*{url}(page=*{currentPage - 1})}" aria-label="Previous">
-                                    <span aria-hidden="true">&lt;</span>
+                                    <span aria-hidden="true">&lsaquo;</span>
                                 </a>
                             </li>
 
@@ -140,7 +140,7 @@
 
                             <li class="page-item">
                                 <a class="page-link" th:href="*{currentPage == (startIndex + pageCount - 1)} ? '#' : @{*{url}(page=*{currentPage + 1})}" aria-label="Next">
-                                    <span aria-hidden="true">&gt;</span>
+                                    <span aria-hidden="true">&rsaquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
