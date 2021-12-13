@@ -15,7 +15,8 @@
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
-    
+    <script src="script/jquery-3.6.0.min.js"></script>
+
     <style>
         .category-table-div {
             min-width: 400px;
@@ -23,7 +24,7 @@
             min-height: 350px;
         }
 
-        tr > th:first-child {
+        tr>th:first-child {
             width: 50px;
             padding-left: 20px;
         }
@@ -39,6 +40,47 @@
             margin: 0 auto;
         }
     </style>
+    <script th:inline="javascript">
+        var DeleteResultModal;
+        var deleteModalShow = /*[[${isDeleteRedirect}]]*/ false;
+
+        $(function () {
+            DeleteResultModal = new bootstrap.Modal(document.getElementById('deleteResultModal'), {
+                keyboard: false
+            });
+
+            // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+            if(deleteModalShow){
+                DeleteResultModal.toggle();
+            }
+
+            // 刪除的checkbox事件
+            $('tbody th input[type=checkbox]').on('change', function(){
+                let count = $('tbody th input[type=checkbox]:checked').length;
+                if(count == 0){
+                    $('#btnDelete').prop('disabled', true);
+                }
+                else{
+                    $('#btnDelete').prop('disabled', false);
+                    let itemStr = '';
+                    let itemStrHidden = '';
+
+                    let i = 1;
+                    for(let item of $('tbody th input[type=checkbox]:checked')){
+                        itemStr += $(item).parent().parent().siblings('td').eq(1).text();
+                        itemStrHidden += $(item).attr('id').slice(2);
+
+                        if(i++ != count){
+                            itemStr += "、";
+                            itemStrHidden += ",";
+                        }
+                    }
+                    $('#deleteModal-items').text(itemStr);
+                    $('#deleteItemsHidden').val(itemStrHidden);
+                }
+            })
+        })
+    </script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -47,12 +89,12 @@
     <div th:replace="SystemAdmin/MainTemplate :: navbar(${isManager})"></div>
 
     <div id="layoutSidenav">
-       
+
         <!-- sidenav -->
         <div th:replace="SystemAdmin/MainTemplate :: sidenav('', '', '', 'active')"></div>
 
         <div id="layoutSidenav_content">
-            <div class="pageContent" >
+            <div class="pageContent">
                 <h4>流水帳分類管理</h4>
 
                 <!-- bread crumb -->
@@ -67,7 +109,10 @@
                 <!-- Add & Delete button -->
                 <div>
                     <a th:href="@{/categoryDetail}" role="button" class="btn btn-outline-success">Add</a>
-                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteCheckModal" id="btnDelete" disabled>
+                        Delete
+                    </button>
                 </div>
 
                 <!-- Table -->
@@ -87,7 +132,8 @@
                             <tr th:each="category: ${categoryList}">
                                 <th scope="row">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" th:id="${'ID' + category.categoryID}">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            th:id="${'ID' + category.categoryID}">
                                     </div>
                                 </th>
                                 <td th:text="${category.createDate}"></td>
@@ -102,7 +148,47 @@
 
                 <!-- pagination -->
                 <div th:replace="SystemAdmin/MainTemplate :: pagination(${pagerObj})"></div>
-                
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Check Modal -->
+    <div class="modal fade" id="deleteCheckModal" tabindex="-1" aria-labelledby="deleteCheckModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#dc3545"><i class="fas fa-exclamation-triangle"></i> 確定刪除分類嗎？</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteModal-items"></p>
+                </div>
+                <div class="modal-footer">
+                    <form th:action="@{/deleteCategories}" method="post">
+                        <input type="hidden" id="deleteItemsHidden" name="deleteItemsHidden" value="" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-danger">確定</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Result Modal -->
+    <div class="modal fade" id="deleteResultModal" tabindex="-1" aria-labelledby="deleteResultModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" th:object="${errorCountAndMessageDto}">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#dc3545">共[[*{successCount}]]個成功，[[*{failedCount}]]個失敗</h5>
+                </div>
+                <div class="modal-body">
+                    <p th:each="msg: *{errMessages}" th:text="${msg}"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">確定</button>
+                </div>
             </div>
         </div>
     </div>

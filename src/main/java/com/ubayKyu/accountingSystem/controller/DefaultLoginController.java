@@ -2,6 +2,7 @@ package com.ubayKyu.accountingSystem.controller;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -75,14 +76,14 @@ public class DefaultLoginController {
         }
 
         // Check Account & PWD
-        UserInfo user = userInfoService.getUserByAccountPwd(userLogin.getAccount(), userLogin.getPassword());
-        if (user == null) {
+        Optional<UserInfo> user = userInfoService.getUserByAccountPwd(userLogin.getAccount(), userLogin.getPassword());
+        if (user.isEmpty()) {
             result.rejectValue("password", "accountIncorrect", "帳號或密碼不正確");
             return "Login";
         }
 
         // 加入Session
-        session.setAttribute("LoginID", user.userID);
+        session.setAttribute("LoginID", user.get().userID);
 
         return "redirect:/userProfile";
     }

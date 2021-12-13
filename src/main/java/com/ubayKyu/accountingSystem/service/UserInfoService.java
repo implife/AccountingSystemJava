@@ -24,19 +24,17 @@ public class UserInfoService {
 		return repository.findById(uuid);
 	}
 
-	public UserInfo getUserByAccountPwd(String account, String pwd){
+	public Optional<UserInfo> getUserByAccountPwd(String account, String pwd){
 		return repository.findAll()
 			.stream()
 			.filter(item -> item.account.equals(account) && item.pwd.equals(pwd))
-			.findFirst()
-			.orElse(null);
+			.findFirst();
 	}
 
 	public boolean isManager(UUID uuid) {
-		boolean isManager = repository.findById(uuid)
+		return repository.findById(uuid)
 			.map(user -> user.userLevel == 0)
 			.orElse(false);
-		return isManager;
 	}
 
 }

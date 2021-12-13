@@ -87,6 +87,11 @@
         "name": "th:action",
         "description": "X attributes",
         "valueSet": "thymeleaf"
+      },
+      {
+        "name": "th:inline",
+        "description": "X attributes",
+        "valueSet": "thymeleaf-inline"
       }
   
     ],
@@ -117,6 +122,23 @@
           
           
   
+        ]
+      },
+      {
+        "name": "thymeleaf-inline",
+        "values": [
+          {
+            "name": "none",
+            "description": "Disabling inlining"
+          },
+          {
+            "name": "text",
+            "description": "Text inlining: textual template modes"
+          },
+          {
+            "name": "javascript",
+            "description": "JavaScript inlining"
+          }
         ]
       }
     ]
