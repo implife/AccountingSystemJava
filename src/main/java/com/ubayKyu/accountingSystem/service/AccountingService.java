@@ -29,8 +29,8 @@ public class AccountingService {
     public int getCountOfCategory(UUID uuid){
         return (int)repository.findAll()
             .stream()
-            .filter(item -> Optional.ofNullable(item.category)
-                .map(obj -> obj.categoryID.equals(uuid))
+            .filter(item -> Optional.ofNullable(item.getCategory())
+                .map(obj -> obj.getCategoryID().equals(uuid))
                 .orElse(false))
             .count();
     }

@@ -10,25 +10,13 @@
     <title>流水帳管理</title>
 
     <link href="stylesheet/admin.css" rel="stylesheet" />
+    <link href="stylesheet/mainTemplate.css" rel="stylesheet" />
 
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
     
     <style>
-        .sb-sidenav-menu-heading {
-            font-size: .9rem !important;
-        }
-
-        .sb-nav-link-icon {
-            padding-left: 10px;
-        }
-
-        .pageContent {
-            padding-top: 20px;
-            padding-left: 50px;
-        }
-
         select {
             display: inline-block !important;
             max-width: 200px;
@@ -50,68 +38,15 @@
 </head>
 
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="UserProfile.html">流水帳管理系統</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                    aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
-                        class="fas fa-search"></i></button>
-            </div>
-        </form>
-        <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="UserProfile.html">個人資訊</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li><a class="dropdown-item" href="#!">登出</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+
+    <!-- navbar -->
+    <div th:replace="SystemAdmin/MainTemplate :: navbar(${isManager})"></div>
+
     <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
 
-                        <div class="sb-sidenav-menu-heading"><i class="fas fa-folder-open"></i>管理者後台</div>
-                        <a class="nav-link" th:href="@{/userList}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            會員管理
-                        </a>
+        <!-- sidenav -->
+        <div th:replace="SystemAdmin/MainTemplate :: sidenav('', '', 'active', '')"></div>
 
-                        <div class="sb-sidenav-menu-heading"><i class="fas fa-folder-open"></i>後台管理</div>
-                        <a class="nav-link" th:href="@{/userProfile}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user-cog"></i></div>
-                            個人資訊
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading"><i class="fas fa-folder-open"></i>流水帳紀錄</div>
-                        <a class="nav-link active" th:href="@{/accountingList}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
-                            流水帳管理
-                        </a>
-                        <a class="nav-link" th:href="@{/categoryList}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            流水帳分類管理
-                        </a>
-
-                    </div>
-                </div>
-            </nav>
-        </div>
         <div id="layoutSidenav_content">
             <div class="pageContent">
                 <h4>流水帳管理</h4>
@@ -170,7 +105,9 @@
             </div>
         </div>
     </div>
-    
+
+    <div th:replace="SystemAdmin/MainTemplate :: modals"></div>
+
 </body>
 
 </html>

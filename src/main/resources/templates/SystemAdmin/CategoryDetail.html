@@ -15,6 +15,7 @@
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
+    <script src="script/jquery-3.6.0.min.js"></script>
 
     <style>
         .category-input-div {
@@ -30,7 +31,36 @@
         .category-input-div>button {
             margin-left: 60px;
         }
+
+        .err-msg {
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: .875em;
+            color: #dc3545;
+        }
+
+        .err-msg-btn {
+            color: #dc3545;
+            display: inline-block;
+        }
     </style>
+
+<script th:inline="javascript">
+    var SuccessModal;
+    var SuccessModalShow = /*[[${isSuccessModalShow}]]*/ false;
+
+    $(function () {
+        SuccessModal = new bootstrap.Modal(document.getElementById('successModal'), {
+            keyboard: false
+        });
+
+        // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+        if(SuccessModalShow){
+            SuccessModal.toggle();
+        }
+
+    })
+</script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -63,6 +93,7 @@
                             <label for="caption" class="col-form-label">標題</label>
                             <div class="col-auto">
                                 <input type="text" class="form-control" th:field="*{caption}">
+                                <div class="err-msg" th:each="error: ${#fields.errors('caption')}" th:text="${error}"></div>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -73,8 +104,25 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-outline-primary" id="btnSave">Save</button>
+                        <div class="err-msg-btn" th:if="${databaseAddError != null}" th:text="${databaseAddError}"></div>
                     </div>
+                    <input type="hidden" th:field="*{categoryId}">
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 style="color:#198754">[[${successType}]]成功!</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">確定</button>
+                </div>
             </div>
         </div>
     </div>

@@ -27,13 +27,13 @@ public class UserInfoService {
 	public Optional<UserInfo> getUserByAccountPwd(String account, String pwd){
 		return repository.findAll()
 			.stream()
-			.filter(item -> item.account.equals(account) && item.pwd.equals(pwd))
+			.filter(item -> item.getAccount().equals(account) && item.getPwd().equals(pwd))
 			.findFirst();
 	}
 
 	public boolean isManager(UUID uuid) {
 		return repository.findById(uuid)
-			.map(user -> user.userLevel == 0)
+			.map(user -> user.getUserLevel() == 0)
 			.orElse(false);
 	}
 

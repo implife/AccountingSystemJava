@@ -38,9 +38,9 @@ public class DefaultLoginController {
         List<Accounting> accountingAll = accountService.getAll();
         int accountSize = accountingAll.size();
         
-        String first = accountingAll.get(0).createDate
+        String first = accountingAll.get(0).getCreateDate()
             .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
-        String last = accountingAll.get(accountSize - 1).createDate
+        String last = accountingAll.get(accountSize - 1).getCreateDate()
             .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
         
         model.addAttribute("accountingTotalCount", accountSize)
@@ -83,7 +83,7 @@ public class DefaultLoginController {
         }
 
         // 加入Session
-        session.setAttribute("LoginID", user.get().userID);
+        session.setAttribute("LoginID", user.get().getUserID());
 
         return "redirect:/userProfile";
     }

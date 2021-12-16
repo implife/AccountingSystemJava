@@ -20,19 +20,61 @@ public class Category {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "category_id", insertable = false, updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
-    public UUID categoryID;
+    private UUID categoryID;
 
 	@Column(name = "category_name", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
-    public String categoryName;
+    private String categoryName;
 
 	@Column(name = "create_date", nullable=false, unique=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
-    public LocalDateTime createDate;
+    private LocalDateTime createDate;
 
 	@Column(name = "remark", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
-    public String remark;
+    private String remark;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
-    public UserInfo userInfo;
+    private UserInfo userInfo;
+
+    public UUID getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(UUID categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+
 
 }

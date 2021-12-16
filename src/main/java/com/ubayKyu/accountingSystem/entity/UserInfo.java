@@ -18,28 +18,92 @@ public class UserInfo {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
-    public UUID userID;
+    private UUID userID;
 	
 	@Column(name = "account", nullable=false, unique=false, columnDefinition = "varchar(50)")
-	public String account;
+	private String account;
 
 	@Column(name = "name", nullable=false, unique=false, columnDefinition = "nvarchar(100)")
-	public String name;
+	private String name;
 
 	@Column(name = "pwd", nullable=false, unique=false, columnDefinition = "varchar(50)")
-	public String pwd;
+	private String pwd;
 
 	@Column(name = "email", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
-	public String email;
+	private String email;
 
 	@Column(name = "user_level", nullable=false, unique=false)
-	public Integer userLevel;
+	private Integer userLevel;
 
 	@Column(name = "create_date", nullable=false, unique=false, columnDefinition = "datetime")
-	public LocalDateTime createDate;
+	private LocalDateTime createDate;
 
 	@Column(name = "modify_date", nullable=false, unique=false, columnDefinition = "datetime")
-	public LocalDateTime modifyDate;
+	private LocalDateTime modifyDate;
+
+	public UUID getUserID() {
+		return userID;
+	}
+
+	public void setUserID(UUID userID) {
+		this.userID = userID;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(Integer userLevel) {
+		this.userLevel = userLevel;
+	}
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
+	public LocalDateTime getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(LocalDateTime modifyDate) {
+		this.modifyDate = modifyDate;
+	}
 
 
 
