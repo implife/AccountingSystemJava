@@ -20,25 +20,25 @@ public class UserInfo {
     @Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
     private UUID userID;
 	
-	@Column(name = "account", nullable=false, unique=false, columnDefinition = "varchar(50)")
+	@Column(name = "account", nullable=false, columnDefinition = "varchar(50)")
 	private String account;
 
-	@Column(name = "name", nullable=false, unique=false, columnDefinition = "nvarchar(100)")
+	@Column(name = "name", nullable=false, columnDefinition = "nvarchar(100)")
 	private String name;
 
-	@Column(name = "pwd", nullable=false, unique=false, columnDefinition = "varchar(50)")
+	@Column(name = "pwd", nullable=false, columnDefinition = "varchar(50)")
 	private String pwd;
 
-	@Column(name = "email", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
+	@Column(name = "email", nullable=false, columnDefinition = "nvarchar(MAX)")
 	private String email;
 
-	@Column(name = "user_level", nullable=false, unique=false)
+	@Column(name = "user_level", nullable=false)
 	private Integer userLevel;
 
-	@Column(name = "create_date", nullable=false, unique=false, columnDefinition = "datetime")
+	@Column(name = "create_date", nullable=false, columnDefinition = "datetime")
 	private LocalDateTime createDate;
 
-	@Column(name = "modify_date", nullable=false, unique=false, columnDefinition = "datetime")
+	@Column(name = "modify_date", nullable=false, columnDefinition = "datetime")
 	private LocalDateTime modifyDate;
 
 	public UUID getUserID() {

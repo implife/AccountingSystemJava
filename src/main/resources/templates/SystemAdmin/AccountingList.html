@@ -17,8 +17,14 @@
     <script src="script/admin.js"></script>
     
     <style>
-        .total-this-month {
+        .total-amount {
             margin-left: 6%;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .total-this-month {
+            margin-left: 2%;
             font-size: 18px;
             font-weight: bold;
         }
@@ -32,6 +38,10 @@
         tr > th:first-child {
             width: 50px;
             padding-left: 20px;
+        }
+
+        .amount-minus {
+            color: red !important;
         }
 
         .ucPager-div {
@@ -72,9 +82,10 @@
 
                 <!-- Add & Delete button -->
                 <div>
-                    <button type="button" class="btn btn-outline-success">Add</button>
+                    <a class="btn btn-outline-success" role="button" th:href="@{/accountingDetail}">Add</a>
                     <button type="button" class="btn btn-outline-danger">Delete</button>
-                    <span class="total-this-month">小記 490 元</span>
+                    <span class="total-amount">小記 [[${totalAmount}]] 元</span>
+                    <span class="total-this-month">本月小記 [[${totalAmountThisMonth}]] 元</span>
                 </div>
 
                 <!-- Table -->
@@ -92,69 +103,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr th:each="accounting: ${accountingList}" th:object="${accounting}">
                                 <th scope="row">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="" th:id="*{'ID' + accountingId}">
                                     </div>
                                 </th>
-                                <td>2021/7/5</td>
-                                <td>我的分類1</td>
-                                <td>收入</td>
-                                <td>2000</td>
-                                <td>工作收入</td>
-                                <td><a href="#">Edit</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                                    </div>
-                                </th>
-                                <td>2021/7/5</td>
-                                <td>我的分類2</td>
-                                <td>支出</td>
-                                <td><span class="money-out">(100)</span></td>
-                                <td>買便當</td>
-                                <td><a href="#">Edit</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                    </div>
-                                </th>
-                                <td>2021/7/5</td>
-                                <td>我的分類2</td>
-                                <td>支出</td>
-                                <td><span class="money-out">(150)</span></td>
-                                <td>買晚餐</td>
-                                <td><a href="#">Edit</a></td>
+                                <td th:text="*{createDate}"></td>
+                                <td th:text="*{categoryName}"></td>
+                                <td th:text="*{type}"></td>
+                                <td th:class="${#strings.equals(#object.type, '支出')} ? 'amount-minus'" th:text="*{amount}"></td>
+                                <td th:text="*{remark}"></td>
+                                <td><a th:href="@{/accountingDetail(AID=*{accountingId})}">Edit</a></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
+                
                 <!-- pagination -->
-                <div class="ucPager-div">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                <div th:replace="SystemAdmin/MainTemplate :: pagination(${pagerObj})"></div>
+
             </div>
         </div>
     </div>

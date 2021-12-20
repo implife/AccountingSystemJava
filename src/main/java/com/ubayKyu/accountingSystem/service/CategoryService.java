@@ -11,7 +11,10 @@ import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.CategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +24,21 @@ public class CategoryService {
     @Autowired
     private UserInfoService userInfoService;
 
+    // should delete
     public List<Category> getCategoriesByUserID(UUID id){
         return repository.findAll(Sort.by("createDate"))
             .stream()
             .filter(item -> item.getUserInfo().getUserID().equals(id))
             .toList();
+    }
+
+    public int getCategoriesCountByUserId(UUID userId){
+        if(userId == null){
+            return 0;
+        }
+
+        Integer result = repository.getCountByUserId(userId);
+        return result == null ? 0 : result;
     }
 
     public Optional<Category> getCategoryByCategoryIDStr(UUID userId, String categoryIdStr){
@@ -57,6 +70,13 @@ public class CategoryService {
             .stream()
             .filter(item -> item.getCategoryID().equals(categoryId))
             .findFirst();
+    }
+
+    // 處理分頁
+    public List<Category> getCategoriesByUserIdAndPages(UUID userId, int currentPage, int sizeInPage){
+        return repository
+            .findByUserInfo(userInfoService.getUserById(userId).get(), PageRequest.of(currentPage - 1, sizeInPage, Direction.DESC, "createDate"))
+            .getContent();
     }
 
     // 新增一筆類別進資料庫，成功的話回傳該UUID

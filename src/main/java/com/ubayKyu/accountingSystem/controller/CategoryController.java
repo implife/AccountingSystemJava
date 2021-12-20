@@ -49,11 +49,11 @@ public class CategoryController {
         @ModelAttribute ErrorCountAndMessageDto errCountMsgDto, Model model) {
 
         // Check Login
-        UUID uuid = (UUID)session.getAttribute("LoginID");
-        if(uuid == null){
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userId == null){
             return "redirect:/loginPage";
         }
-        model.addAttribute("isManager", userInfoService.isManager(uuid));
+        model.addAttribute("isManager", userInfoService.isManager(userId));
 
         // page參數
         int currentPage;
@@ -63,19 +63,16 @@ public class CategoryController {
             currentPage = 1;
         }
 
-        List<Category> rawData = categoryService.getCategoriesByUserID(uuid);
-
         // 處理頁數
-        PaginationDto pagination = new PaginationDto("/categoryList", rawData.size(), currentPage);
+        PaginationDto pagination = new PaginationDto("/categoryList", categoryService.getCategoriesCountByUserId(userId), currentPage);
         model.addAttribute("pagerObj", pagination);
 
-        // 該使用者的分類做成CategoryRowDto的List，並處理成所在頁
-        List<CategoryRowDto> rows = rawData
+        // 取得所在頁資料並做成CategoryRowDto的List
+        List<CategoryRowDto> rows = categoryService
+            .getCategoriesByUserIdAndPages(userId, pagination.getCurrentPage(), pagination.getItemSizeInPage())
             .stream()
-            .skip((pagination.getCurrentPage() - 1) * pagination.getItemSizeInPage())
-            .limit(pagination.getItemSizeInPage())
             .map(item -> new CategoryRowDto(item.getCreateDate(), item.getCategoryName(),
-                 accountingService.getCountOfCategory(item.getCategoryID()), item.getCategoryID().toString()))
+                accountingService.getCountOfCategory(item.getCategoryID()), item.getCategoryID().toString()))
             .toList();
 
         model.addAttribute("categoryList", rows);

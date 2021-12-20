@@ -17,7 +17,7 @@ public class UserInfoService {
 	
 
 	public int getTotalCount(){
-		return repository.findAll().size();
+		return (int)repository.count();
 	}
 
 	public Optional<UserInfo> getUserById(UUID uuid){

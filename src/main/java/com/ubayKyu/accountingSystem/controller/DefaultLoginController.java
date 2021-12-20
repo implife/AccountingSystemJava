@@ -88,6 +88,12 @@ public class DefaultLoginController {
         return "redirect:/userProfile";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
 
