@@ -9,16 +9,16 @@ public class AccountingRowDto {
     private String categoryName;
     private String type;
     private int amount;
-    private String remark;
+    private String caption;
 
     public AccountingRowDto(int accountingId, LocalDateTime createDate, String categoryName, String type, int amount,
-            String remark) {
+            String caption) {
         this.accountingId = accountingId;
         this.createDate = createDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         this.categoryName = categoryName;
         this.type = type;
         this.amount = Math.abs(amount);
-        this.remark = remark;
+        this.caption = caption;
     }
     public int getAccountingId() {
         return accountingId;
@@ -50,11 +50,11 @@ public class AccountingRowDto {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-    public String getRemark() {
-        return remark;
+    public String getCaption() {
+        return caption;
     }
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
 }

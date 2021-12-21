@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.ubayKyu.accountingSystem.dto.AccountingInputDto;
 import com.ubayKyu.accountingSystem.entity.Accounting;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.AccountingRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +23,21 @@ public class AccountingService {
     private AccountingRepository repository;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private CategoryService categoryService;
 
     public int getTotalCount(){
         return (int)repository.count();
     }
 
-    public List<Accounting> getAll(){
-        return repository.findAll(Sort.by("createDate"));
+    // 最早記帳時間
+    public LocalDateTime getFirstAccountingDateTime(){
+        return repository.getFirstAccountingDateTime();
+    }
+
+    // 最晚記帳時間
+    public LocalDateTime getLastAccountingDateTime(){
+        return repository.getLastAccountingDateTime();
     }
 
     public List<Accounting> getAccountingsByUserId(UUID userId) {
@@ -43,6 +51,7 @@ public class AccountingService {
         return repository.findByUserInfoOrderByCreateDateDesc(userInfo.get());
     }
 
+    // 該使用者的流水帳數量
     public int getAccountingsCountByUserId(UUID userId) {
         if(userId == null){
             return 0;
@@ -76,6 +85,35 @@ public class AccountingService {
             .getContent();
     }
 
+    // 新增流水帳
+    public int addAccounting(UUID userId, AccountingInputDto accountingDto, List<String> errMsg) {
+        
+        // check user
+        Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
+        if(currentUser.isEmpty()){
+            errMsg.add("使用者錯誤");
+            return -1;
+        }
+
+        Accounting newAccount = new Accounting();
+        newAccount.setUserInfo(currentUser.get());
+        newAccount.setCaption(accountingDto.getCaption());
+        newAccount.setActType(accountingDto.getInout().equals("out") ? 0 : 1);
+        newAccount.setCategory(categoryService.getCategoryByUserIdAndCategoryName(userId, accountingDto.getCategoryName()));
+        newAccount.setAmount(accountingDto.getInout().equals("out") ? accountingDto.getAmount() * -1 : accountingDto.getAmount());
+        newAccount.setRemark(accountingDto.getRemark());
+
+        try {
+
+            return repository.save(newAccount).getId();
+
+        } catch (Exception e) {
+            errMsg.add("資料庫錯誤");
+            return -1;
+        }
+
+    }
+
     // 輸入category ID回傳流水帳數量
     public int getCountOfCategory(UUID uuid){
         return (int)repository.findAll()
@@ -84,5 +122,52 @@ public class AccountingService {
                 .map(obj -> obj.getCategoryID().equals(uuid))
                 .orElse(false))
             .count();
+    }
+
+    // 刪除多筆流水帳資料
+    public boolean deleteAccountings(String[] ids, UUID userId, List<String> errMsg) {
+                // 使用者錯誤回傳false
+                if(userId == null){
+                    errMsg.add("使用者錯誤");
+                    return false;
+                }
+                Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
+                if(currentUser.isEmpty()){
+                    errMsg.add("使用者不存在");
+                    return false;
+                }
+
+                List<Accounting> deleteList = new ArrayList<>();
+        
+                // 檢查格式並從資料庫尋找
+                for(String id: ids){
+                    int convertResult;
+                    try {
+                        convertResult = Integer.parseInt(id);
+                    } catch (NumberFormatException e) {
+                        errMsg.add(id + " -> ID無法辨識");
+                        continue;
+                    }
+
+                    Optional<Accounting> accoResult = repository.findByIdAndUserInfo(convertResult, currentUser.get());
+                    if(accoResult.isEmpty()){
+                        errMsg.add(id + " -> ID不存在");
+                        continue;
+                    }
+                    else{
+                        deleteList.add(accoResult.get());
+                    }
+                }
+        
+                // 刪除資料
+                for(Accounting accounting: deleteList){
+                    try {
+                        repository.delete(accounting);
+                    } catch (Exception e) {
+                        errMsg.add(accounting.getCaption() + " -> 資料庫錯誤");
+                    }
+                }
+        
+                return true;
     }
 }

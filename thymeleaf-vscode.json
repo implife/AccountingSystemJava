@@ -92,6 +92,16 @@
         "name": "th:inline",
         "description": "X attributes",
         "valueSet": "thymeleaf-inline"
+      },
+      {
+        "name": "th:selected",
+        "description": "Use for html option.",
+        "valueSet": "thymeleaf-inline"
+      },
+      {
+        "name": "th:onclick",
+        "description": "Use for html onclick attritube.",
+        "valueSet": "thymeleaf-inline"
       }
   
     ],

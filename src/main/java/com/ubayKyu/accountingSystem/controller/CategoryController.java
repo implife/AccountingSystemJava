@@ -18,7 +18,6 @@ import com.ubayKyu.accountingSystem.service.CategoryService;
 import com.ubayKyu.accountingSystem.service.UserInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -137,20 +136,20 @@ public class CategoryController {
         return "SystemAdmin/CategoryDetail";
     }
 
-    // delete類別的按鈕
+    // 刪除多筆類別按鈕
     @PostMapping("/deleteCategories")
-    public String deleteCategories(String[] deleteItemsHidden, RedirectAttributes redirectAttr){
+    public String deleteCategories(String[] delCheckBoxes, RedirectAttributes redirectAttr){
         List<String> errMsg = new ArrayList<>();
-        boolean userSuccess = categoryService.deleteCategories(deleteItemsHidden, (UUID)session.getAttribute("LoginID"), errMsg);
+        boolean userSuccess = categoryService.deleteCategories(delCheckBoxes, (UUID)session.getAttribute("LoginID"), errMsg);
 
         // 將結果做成ErrorCountAndMessageDto再重新導向
         ErrorCountAndMessageDto errCountAndMsg = new ErrorCountAndMessageDto();
         if(!userSuccess){
             errCountAndMsg.setSuccessCount(0);
-            errCountAndMsg.setFailedCount(deleteItemsHidden.length);
+            errCountAndMsg.setFailedCount(delCheckBoxes.length);
         }
         else{
-            errCountAndMsg.setSuccessCount(deleteItemsHidden.length - errMsg.size());
+            errCountAndMsg.setSuccessCount(delCheckBoxes.length - errMsg.size());
             errCountAndMsg.setFailedCount(errMsg.size());
         }
 
@@ -242,10 +241,6 @@ public class CategoryController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-
-        // 將前台所選的delete項目的id分割成String[]
-        StringArrayPropertyEditor stringArrayEditor = new StringArrayPropertyEditor();
-        binder.registerCustomEditor(String[].class, "deleteItemsHidden", stringArrayEditor);
 
         // 字串trim
         StringTrimmerEditor trimmerEditor = new StringTrimmerEditor(false);

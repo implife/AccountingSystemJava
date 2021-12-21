@@ -11,7 +11,6 @@ import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.CategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -24,14 +23,27 @@ public class CategoryService {
     @Autowired
     private UserInfoService userInfoService;
 
-    // should delete
-    public List<Category> getCategoriesByUserID(UUID id){
-        return repository.findAll(Sort.by("createDate"))
-            .stream()
-            .filter(item -> item.getUserInfo().getUserID().equals(id))
-            .toList();
+    public List<Category> getCategoriesByUserID(UUID userId){
+        if(userId == null){
+            return new ArrayList<Category>();
+        }
+        return repository.findByUserInfo(userInfoService.getUserById(userId).get(), Sort.by(Direction.DESC, "createDate"));
     }
 
+    public Category getCategoryByUserIdAndCategoryName(UUID userId, String categoryName){
+        if(userId == null || categoryName == null){
+            return null;
+        }
+
+        Optional<UserInfo> userInfo = userInfoService.getUserById(userId);
+        if(userInfo.isEmpty()){
+            return null;
+        }
+
+        return repository.findByUserInfoAndCategoryName(userInfo.get(), categoryName);
+    }
+
+    // 取得該使用者的分類數量
     public int getCategoriesCountByUserId(UUID userId){
         if(userId == null){
             return 0;
@@ -41,6 +53,7 @@ public class CategoryService {
         return result == null ? 0 : result;
     }
 
+    // 利用categoryID(String)取得該類別
     public Optional<Category> getCategoryByCategoryIDStr(UUID userId, String categoryIdStr){
         if(categoryIdStr == null){
             return Optional.empty();
@@ -61,6 +74,7 @@ public class CategoryService {
         }
     }
 
+    // 利用使用者ID(驗證用)和類別ID取得該類別
     public Optional<Category> getCategoryByuserIdAndCategoryId(UUID userId, UUID categoryId){
         if(userId == null || categoryId == null){
             return Optional.empty();

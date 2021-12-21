@@ -50,27 +50,27 @@
             });
 
             // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
-            if(deleteModalShow){
+            if (deleteModalShow) {
                 DeleteResultModal.toggle();
             }
 
             // 刪除的checkbox事件
-            $('tbody th input[type=checkbox]').on('change', function(){
+            $('tbody th input[type=checkbox]').on('change', function () {
                 let count = $('tbody th input[type=checkbox]:checked').length;
-                if(count == 0){
+                if (count == 0) {
                     $('#btnDelete').prop('disabled', true);
                 }
-                else{
+                else {
                     $('#btnDelete').prop('disabled', false);
                     let itemStr = '';
                     let itemStrHidden = '';
 
                     let i = 1;
-                    for(let item of $('tbody th input[type=checkbox]:checked')){
+                    for (let item of $('tbody th input[type=checkbox]:checked')) {
                         itemStr += $(item).parent().parent().siblings('td').eq(1).text();
                         itemStrHidden += $(item).attr('id').slice(2);
 
-                        if(i++ != count){
+                        if (i++ != count) {
                             itemStr += "、";
                             itemStrHidden += ",";
                         }
@@ -128,20 +128,20 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr th:each="category: ${categoryList}">
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            th:id="${'ID' + category.categoryID}">
-                                    </div>
-                                </th>
-                                <td th:text="${category.createDate}"></td>
-                                <td th:text="${category.categoryName}"></td>
-                                <td th:text="${category.accountingCount}"></td>
-                                <td><a th:href="@{/categoryDetail(CID=${category.categoryID})}">Edit</a></td>
-                            </tr>
-
+                            <form th:action="@{/deleteCategories}" method="post" id="deleteForm">
+                                <tr th:each="category: ${categoryList}" th:object="${category}">
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" th:value="*{categoryID}"
+                                            name="delCheckBoxes">
+                                        </div>
+                                    </th>
+                                    <td th:text="*{createDate}"></td>
+                                    <td th:text="*{categoryName}"></td>
+                                    <td th:text="*{accountingCount}"></td>
+                                    <td><a th:href="@{/categoryDetail(CID=*{categoryID})}">Edit</a></td>
+                                </tr>
+                            </form>
                         </tbody>
                     </table>
                 </div>
@@ -149,28 +149,6 @@
                 <!-- pagination -->
                 <div th:replace="SystemAdmin/MainTemplate :: pagination(${pagerObj})"></div>
 
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Check Modal -->
-    <div class="modal fade" id="deleteCheckModal" tabindex="-1" aria-labelledby="deleteCheckModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" style="color:#dc3545"><i class="fas fa-exclamation-triangle"></i> 確定刪除分類嗎？</h5>
-                </div>
-                <div class="modal-body">
-                    <p id="deleteModal-items"></p>
-                </div>
-                <div class="modal-footer">
-                    <form th:action="@{/deleteCategories}" method="post">
-                        <input type="hidden" id="deleteItemsHidden" name="deleteItemsHidden" value="" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-danger">確定</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -193,7 +171,9 @@
         </div>
     </div>
 
-    <div th:replace="SystemAdmin/MainTemplate :: modals"></div>
+    <div th:replace="SystemAdmin/MainTemplate :: deleteCheckModal('deleteForm')"></div>
+
+    <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
 
 </body>
 

@@ -1,5 +1,6 @@
 package com.ubayKyu.accountingSystem.controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -35,15 +36,18 @@ public class DefaultLoginController {
 
     @RequestMapping("/")
     public String DefaultPage(Model model, HttpSession session) {
-        List<Accounting> accountingAll = accountService.getAll();
-        int accountSize = accountingAll.size();
+
+        // 處理最早與最晚時間
+        LocalDateTime f = accountService.getFirstAccountingDateTime();
+        LocalDateTime l = accountService.getLastAccountingDateTime();
+        String first = "--", last = "--";
+
+        if(f != null && l != null){
+            first = f.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+            last = l.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        }
         
-        String first = accountingAll.get(0).getCreateDate()
-            .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
-        String last = accountingAll.get(accountSize - 1).getCreateDate()
-            .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
-        
-        model.addAttribute("accountingTotalCount", accountSize)
+        model.addAttribute("accountingTotalCount", accountService.getTotalCount())
             .addAttribute("userTotalCount", userInfoService.getTotalCount())
             .addAttribute("firstAccount", first)
             .addAttribute("lastAccount", last);

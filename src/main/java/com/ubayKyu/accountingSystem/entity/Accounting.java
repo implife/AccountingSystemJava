@@ -16,30 +16,30 @@ import javax.persistence.Table;
 public class Accounting {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", insertable = false, updatable = false, nullable = false)
     private Integer id;
 
-	@Column(name = "caption", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
+	@Column(name = "caption", nullable=false, columnDefinition = "nvarchar(MAX)")
     private String caption;
 
-	@Column(name = "amount", nullable=false, unique=false)
+	@Column(name = "amount", nullable=false)
     private Integer amount;
 
-	@Column(name = "act_type", nullable=false, unique=false)
+	@Column(name = "act_type", nullable=false)
     private Integer actType;
 
-	@Column(name = "create_date", nullable=false, unique=false, columnDefinition = "datetime")
+	@Column(name = "create_date", nullable=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
     private LocalDateTime createDate;
 
-	@Column(name = "remark", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
+	@Column(name = "remark", nullable=false, columnDefinition = "nvarchar(MAX)")
     private String remark;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private UserInfo userInfo;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = true, unique = false, updatable = false)
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
     public Integer getId() {

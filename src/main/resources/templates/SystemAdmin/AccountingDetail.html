@@ -15,7 +15,7 @@
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
-    
+
     <style>
         select {
             display: inline-block !important;
@@ -62,51 +62,54 @@
 
                 <!-- Input -->
                 <div class="account-edit-div">
-                    <div class="mb-3 row">
-                        <label for="caption" class="col-form-label">收 / 支</label>
-                        <div class="col-auto pt-1">
-                            <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
-                                <option valur="in" selected>IN</option>
-                                <option value="out">OUT</option>
-                              </select>
+                    <form th:action="@{/newAccounting}" method="post" th:object="${accountingInputDto}">
+                        <div class="mb-2 row">
+                            <label for="inout" class="col-form-label">收 / 支</label>
+                            <div class="col-auto pt-1">
+                                <select class="form-select form-select-sm mb-3" th:field="*{inout}">
+                                    <option th:value="in" th:text="'IN'"></option>
+                                    <option th:value="out" th:text="'OUT'"></option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="caption" class="col-form-label">分類</label>
-                        <div class="col-auto pt-1">
-                            <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
-                                <option selected>我的分類1</option>
-                                <option>我的分類2</option>
-                              </select>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="amount" class="col-form-label">金額</label>
-                        <div class="col-auto">
-                            <input type="text" class="form-control" id="amount" name="amount">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="caption" class="col-form-label">標題</label>
-                        <div class="col-auto">
-                            <input type="text" class="form-control" id="caption" name="caption">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="remark" class="col-form-label">備註</label>
-                        <div class="col">
-                            <textarea id="remark" name="remark" rows="8" cols="50">
+                        <div class="mb-2 row">
+                            <label for="category" class="col-form-label">分類</label>
+                            <div class="col-auto pt-1">
+                                <select class="form-select form-select-sm mb-3" th:field="*{categoryName}">
+                                    
+                                    <option th:value="'未分類'" th:text="'未分類'"></option>
+                                    <option th:each="category, iterStatus: ${categoryDropList}" th:text="${category}"
+                                        th:value="${category}"></option>
 
-                            </textarea>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <button type="button" class="btn btn-outline-primary" id="btnSave">Save</button>
+                        <div class="mb-3 row">
+                            <label for="amount" class="col-form-label">金額</label>
+                            <div class="col-auto">
+                                <input type="text" class="form-control" th:field="*{amount}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="caption" class="col-form-label">標題</label>
+                            <div class="col-auto">
+                                <input type="text" class="form-control" th:field="*{caption}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="remark" class="col-form-label">備註</label>
+                            <div class="col">
+                                <textarea class="form-control" rows="8" cols="50" th:field="*{remark}"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary" id="btnSave">Save</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div th:replace="SystemAdmin/MainTemplate :: modals"></div>
+    <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
 
 </body>
 

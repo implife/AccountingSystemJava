@@ -8,12 +8,17 @@ import com.ubayKyu.accountingSystem.entity.UserInfo;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface CategoryRepository extends JpaRepository<Category,UUID> {
     
     Page<Category> findByUserInfo(UserInfo userInfo, Pageable pageable);
+
+    List<Category> findByUserInfo(UserInfo userInfo, Sort sort);
+
+    Category findByUserInfoAndCategoryName(UserInfo userInfo, String categoryName);
 
     /**
      * 取得特定使用者的分類數量

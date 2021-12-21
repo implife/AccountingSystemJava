@@ -2,6 +2,7 @@ package com.ubayKyu.accountingSystem.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.ubayKyu.accountingSystem.entity.Accounting;
@@ -17,6 +18,24 @@ public interface AccountingRepository extends JpaRepository<Accounting,Integer>{
     List<Accounting> findByUserInfoOrderByCreateDateDesc(UserInfo userInfo);
 
     Page<Accounting> findByUserInfo(UserInfo userInfo, Pageable pageable);
+
+    Optional<Accounting> findByIdAndUserInfo(Integer accountingId, UserInfo userInfo);
+
+    /**
+     * 取得最早的流水帳時間
+     * 
+     * @return may be null when there's no accountings.
+     */
+    @Query(value = "SELECT MIN(create_date) FROM accounting", nativeQuery = true)
+    LocalDateTime getFirstAccountingDateTime();
+
+    /**
+     * 取得最晚的流水帳時間
+     * 
+     * @return may be null when there's no accountings.
+     */
+    @Query(value = "SELECT MAX(create_date) FROM accounting", nativeQuery = true)
+    LocalDateTime getLastAccountingDateTime();
 
     /**
      * 取得特定使用者的流水帳數量

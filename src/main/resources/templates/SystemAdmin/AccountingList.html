@@ -15,7 +15,8 @@
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
-    
+    <script src="script/jquery-3.6.0.min.js"></script>
+
     <style>
         .total-amount {
             margin-left: 6%;
@@ -35,7 +36,7 @@
             min-height: 350px;
         }
 
-        tr > th:first-child {
+        tr>th:first-child {
             width: 50px;
             padding-left: 20px;
         }
@@ -55,6 +56,43 @@
             margin: 0 auto;
         }
     </style>
+    <script th:inline="javascript">
+        var DeleteResultModal;
+        var deleteModalShow = /*[[${isDeleteRedirect}]]*/ false;
+
+        $(function () {
+            DeleteResultModal = new bootstrap.Modal(document.getElementById('deleteResultModal'), {
+                keyboard: false
+            });
+
+            // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+            if(deleteModalShow){
+                DeleteResultModal.toggle();
+            }
+
+            // 刪除的checkbox事件
+            $('tbody th input[type=checkbox]').on('change', function () {
+                let count = $('tbody th input[type=checkbox]:checked').length;
+                if (count == 0) {
+                    $('#btnDelete').prop('disabled', true);
+                }
+                else {
+                    $('#btnDelete').prop('disabled', false);
+                    let itemStr = '';
+
+                    let i = 1;
+                    for (let item of $('tbody th input[type=checkbox]:checked')) {
+                        itemStr += $(item).parent().parent().siblings('td').eq(4).text();
+
+                        if (i++ != count) {
+                            itemStr += "、";
+                        }
+                    }
+                    $('#deleteModal-items').text(itemStr);
+                }
+            })
+        })
+    </script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -83,7 +121,10 @@
                 <!-- Add & Delete button -->
                 <div>
                     <a class="btn btn-outline-success" role="button" th:href="@{/accountingDetail}">Add</a>
-                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteCheckModal" id="btnDelete" disabled>
+                        Delete
+                    </button>
                     <span class="total-amount">小記 [[${totalAmount}]] 元</span>
                     <span class="total-this-month">本月小記 [[${totalAmountThisMonth}]] 元</span>
                 </div>
@@ -103,23 +144,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="accounting: ${accountingList}" th:object="${accounting}">
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" th:id="*{'ID' + accountingId}">
-                                    </div>
-                                </th>
-                                <td th:text="*{createDate}"></td>
-                                <td th:text="*{categoryName}"></td>
-                                <td th:text="*{type}"></td>
-                                <td th:class="${#strings.equals(#object.type, '支出')} ? 'amount-minus'" th:text="*{amount}"></td>
-                                <td th:text="*{remark}"></td>
-                                <td><a th:href="@{/accountingDetail(AID=*{accountingId})}">Edit</a></td>
-                            </tr>
+                            <form th:action="@{/deleteAccounting}" method="post" id="deleteForm">
+                                <tr th:each="accounting: ${accountingList}" th:object="${accounting}">
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" th:value="*{accountingId}"
+                                                name="delCheckBoxes">
+                                        </div>
+                                    </th>
+                                    <td th:text="*{createDate}"></td>
+                                    <td th:text="*{categoryName}"></td>
+                                    <td th:text="*{type}"></td>
+                                    <td th:class="${#strings.equals(#object.type, '支出')} ? 'amount-minus'"
+                                        th:text="*{amount}"></td>
+                                    <td th:text="*{caption}"></td>
+                                    <td><a th:href="@{/accountingDetail(AID=*{accountingId})}">Edit</a></td>
+                                </tr>
+                            </form>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- pagination -->
                 <div th:replace="SystemAdmin/MainTemplate :: pagination(${pagerObj})"></div>
 
@@ -127,7 +172,29 @@
         </div>
     </div>
 
-    <div th:replace="SystemAdmin/MainTemplate :: modals"></div>
+    <!-- Delete Result Modal -->
+    <div class="modal fade" id="deleteResultModal" tabindex="-1" aria-labelledby="deleteResultModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" th:object="${errorCountAndMessageDto}">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:#dc3545">共[[*{successCount}]]個成功，[[*{failedCount}]]個失敗</h5>
+                </div>
+                <div class="modal-body">
+                    <p th:each="msg: *{errMessages}" th:text="${msg}"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
+
+    <div th:replace="SystemAdmin/MainTemplate :: deleteCheckModal('deleteForm')"></div>
+
+    
 
 </body>
 
