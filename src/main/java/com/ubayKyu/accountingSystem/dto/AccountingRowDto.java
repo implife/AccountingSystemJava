@@ -48,7 +48,7 @@ public class AccountingRowDto {
         return amount;
     }
     public void setAmount(int amount) {
-        this.amount = amount;
+        this.amount = Math.abs(amount);
     }
     public String getCaption() {
         return caption;

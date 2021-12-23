@@ -51,6 +51,20 @@ public class AccountingService {
         return repository.findByUserInfoOrderByCreateDateDesc(userInfo.get());
     }
 
+    // 使用userId(驗證用)和accountingId取得該流水帳
+    public Optional<Accounting> getAccountingByIdAndUserId(UUID userId, int accountingId){
+        if(userId == null || accountingId <= 0){
+            return Optional.empty();
+        }
+
+        Optional<UserInfo> user = userInfoService.getUserById(userId);
+        if(user.isEmpty()){
+            return Optional.empty();
+        }
+
+        return repository.findByIdAndUserInfo(accountingId, user.get());
+    }
+
     // 該使用者的流水帳數量
     public int getAccountingsCountByUserId(UUID userId) {
         if(userId == null){
@@ -85,7 +99,7 @@ public class AccountingService {
             .getContent();
     }
 
-    // 新增流水帳
+    // 新增流水帳，失敗回傳-1
     public int addAccounting(UUID userId, AccountingInputDto accountingDto, List<String> errMsg) {
         
         // check user
@@ -111,6 +125,39 @@ public class AccountingService {
             errMsg.add("資料庫錯誤");
             return -1;
         }
+    }
+
+    // 編輯流水帳
+    public boolean updateAccounting(UUID userId, AccountingInputDto accountingDto, List<String> errMsg){
+        
+        // check user
+        Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
+        if(currentUser.isEmpty()){
+            errMsg.add("使用者錯誤");
+            return false;
+        }
+
+        // check accountingId
+        Optional<Accounting> targetAccounting = this.getAccountingByIdAndUserId(userId, accountingDto.getAccountingId());
+        if(targetAccounting.isEmpty()){
+            errMsg.add("該類別不存在");
+            return false;
+        }
+
+        targetAccounting.get().setActType(accountingDto.getInout().equals("out") ? 0 : 1);
+        targetAccounting.get().setCaption(accountingDto.getCaption());
+        targetAccounting.get().setAmount(accountingDto.getInout().equals("out") ? accountingDto.getAmount() * -1 : accountingDto.getAmount());
+        targetAccounting.get().setCategory(categoryService.getCategoryByUserIdAndCategoryName(userId, accountingDto.getCategoryName()));
+        targetAccounting.get().setRemark(accountingDto.getRemark());
+
+        try {
+            repository.save(targetAccounting.get());
+            return true;
+
+        } catch (Exception e) {
+            errMsg.add("資料庫錯誤");
+            return false;
+        }
 
     }
 
@@ -126,48 +173,48 @@ public class AccountingService {
 
     // 刪除多筆流水帳資料
     public boolean deleteAccountings(String[] ids, UUID userId, List<String> errMsg) {
-                // 使用者錯誤回傳false
-                if(userId == null){
-                    errMsg.add("使用者錯誤");
-                    return false;
-                }
-                Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
-                if(currentUser.isEmpty()){
-                    errMsg.add("使用者不存在");
-                    return false;
-                }
+        // 使用者錯誤回傳false
+        if(userId == null){
+            errMsg.add("使用者錯誤");
+            return false;
+        }
+        Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
+        if(currentUser.isEmpty()){
+            errMsg.add("使用者不存在");
+            return false;
+        }
 
-                List<Accounting> deleteList = new ArrayList<>();
-        
-                // 檢查格式並從資料庫尋找
-                for(String id: ids){
-                    int convertResult;
-                    try {
-                        convertResult = Integer.parseInt(id);
-                    } catch (NumberFormatException e) {
-                        errMsg.add(id + " -> ID無法辨識");
-                        continue;
-                    }
+        List<Accounting> deleteList = new ArrayList<>();
 
-                    Optional<Accounting> accoResult = repository.findByIdAndUserInfo(convertResult, currentUser.get());
-                    if(accoResult.isEmpty()){
-                        errMsg.add(id + " -> ID不存在");
-                        continue;
-                    }
-                    else{
-                        deleteList.add(accoResult.get());
-                    }
-                }
-        
-                // 刪除資料
-                for(Accounting accounting: deleteList){
-                    try {
-                        repository.delete(accounting);
-                    } catch (Exception e) {
-                        errMsg.add(accounting.getCaption() + " -> 資料庫錯誤");
-                    }
-                }
-        
-                return true;
+        // 檢查格式並從資料庫尋找
+        for(String id: ids){
+            int convertResult;
+            try {
+                convertResult = Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                errMsg.add(id + " -> ID無法辨識");
+                continue;
+            }
+
+            Optional<Accounting> accoResult = repository.findByIdAndUserInfo(convertResult, currentUser.get());
+            if(accoResult.isEmpty()){
+                errMsg.add(id + " -> ID不存在");
+                continue;
+            }
+            else{
+                deleteList.add(accoResult.get());
+            }
+        }
+
+        // 刪除資料
+        for(Accounting accounting: deleteList){
+            try {
+                repository.delete(accounting);
+            } catch (Exception e) {
+                errMsg.add(accounting.getCaption() + " -> 資料庫錯誤");
+            }
+        }
+
+        return true;
     }
 }

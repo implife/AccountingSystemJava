@@ -1,13 +1,31 @@
 package com.ubayKyu.accountingSystem.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 public class AccountingInputDto {
 
+    private int accountingId;
     private String inout = "in";
+
+    @NotBlank
     private String categoryName;
+
+    @Min(value = 1, message = "*金額須 > 0")
+    @Max(value = 10000000, message = "*金額不可超過一千萬")
     private int amount;
+
+    @NotBlank
     private String caption;
     private String remark;
 
+    public Integer getAccountingId() {
+        return accountingId;
+    }
+    public void setAccountingId(Integer accountingId) {
+        this.accountingId = accountingId;
+    }
     public String getInout() {
         return inout;
     }

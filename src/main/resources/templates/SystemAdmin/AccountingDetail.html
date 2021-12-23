@@ -15,6 +15,7 @@
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
+    <script src="script/jquery-3.6.0.min.js"></script>
 
     <style>
         select {
@@ -34,7 +35,35 @@
         #btnSave {
             margin-left: 20px;
         }
+
+        .err-msg {
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: .875em;
+            color: #dc3545;
+        }
+
+        .err-msg-btn {
+            color: #dc3545;
+            display: inline-block;
+        }
     </style>
+    <script th:inline="javascript">
+        var SuccessModal;
+        var SuccessModalShow = /*[[${isSuccessModalShow}]]*/ false;
+    
+        $(function () {
+            SuccessModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                keyboard: false
+            });
+    
+            // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+            if(SuccessModalShow){
+                SuccessModal.toggle();
+            }
+    
+        })
+    </script>    
 </head>
 
 <body class="sb-nav-fixed">
@@ -62,7 +91,7 @@
 
                 <!-- Input -->
                 <div class="account-edit-div">
-                    <form th:action="@{/newAccounting}" method="post" th:object="${accountingInputDto}">
+                    <form th:action="${formAction}" method="post" th:object="${accountingInputDto}">
                         <div class="mb-2 row">
                             <label for="inout" class="col-form-label">收 / 支</label>
                             <div class="col-auto pt-1">
@@ -88,12 +117,14 @@
                             <label for="amount" class="col-form-label">金額</label>
                             <div class="col-auto">
                                 <input type="text" class="form-control" th:field="*{amount}">
+                                <div class="err-msg" th:each="error: ${#fields.errors('amount')}" th:text="${error}"></div>
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="caption" class="col-form-label">標題</label>
                             <div class="col-auto">
                                 <input type="text" class="form-control" th:field="*{caption}">
+                                <div class="err-msg" th:each="error: ${#fields.errors('caption')}" th:text="${error}"></div>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -102,7 +133,11 @@
                                 <textarea class="form-control" rows="8" cols="50" th:field="*{remark}"></textarea>
                             </div>
                         </div>
+
+                        <input type="hidden" th:field="*{accountingId}">
+
                         <button type="submit" class="btn btn-outline-primary" id="btnSave">Save</button>
+                        <div class="err-msg-btn" th:if="${databaseAddError != null}" th:text="${databaseAddError}"></div>
                     </form>
                 </div>
             </div>
@@ -110,6 +145,8 @@
     </div>
 
     <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
+
+    <div th:replace="SystemAdmin/MainTemplate :: successModal(${successType})"></div>
 
 </body>
 

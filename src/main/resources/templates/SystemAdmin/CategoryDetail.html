@@ -45,22 +45,22 @@
         }
     </style>
 
-<script th:inline="javascript">
-    var SuccessModal;
-    var SuccessModalShow = /*[[${isSuccessModalShow}]]*/ false;
+    <script th:inline="javascript">
+        var SuccessModal;
+        var SuccessModalShow = /*[[${isSuccessModalShow}]]*/ false;
 
-    $(function () {
-        SuccessModal = new bootstrap.Modal(document.getElementById('successModal'), {
-            keyboard: false
-        });
+        $(function () {
+            SuccessModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                keyboard: false
+            });
 
-        // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
-        if(SuccessModalShow){
-            SuccessModal.toggle();
-        }
+            // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+            if(SuccessModalShow){
+                SuccessModal.toggle();
+            }
 
-    })
-</script>
+        })
+    </script>
 </head>
 
 <body class="sb-nav-fixed">

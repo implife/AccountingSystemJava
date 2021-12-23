@@ -44,17 +44,6 @@
         .amount-minus {
             color: red !important;
         }
-
-        .ucPager-div {
-            min-width: 400px;
-            max-width: 75%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .ucPager-div>nav {
-            margin: 0 auto;
-        }
     </style>
     <script th:inline="javascript">
         var DeleteResultModal;
@@ -193,8 +182,6 @@
     <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
 
     <div th:replace="SystemAdmin/MainTemplate :: deleteCheckModal('deleteForm')"></div>
-
-    
 
 </body>
 

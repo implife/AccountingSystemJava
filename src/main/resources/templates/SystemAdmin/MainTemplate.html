@@ -173,6 +173,21 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+        th:fragment="successModal(successType)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 style="color:#198754">[[${successType}]]成功!</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Delete Check Modal -->
     <div class="modal fade" id="deleteCheckModal" tabindex="-1" aria-labelledby="deleteCheckModalLabel"
         th:fragment="deleteCheckModal(deleteFormId)">
