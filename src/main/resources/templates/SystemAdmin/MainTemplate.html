@@ -1,39 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head th:fragment="common_header(title, links, scripts, styles)">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>個人資訊</title>
+
+    <title th:replace="${title}"></title>
 
     <link href="stylesheet/admin.css" rel="stylesheet" />
+    <link href="stylesheet/mainTemplate.css" rel="stylesheet" />
+
+    <th:block th:replace="${links}" />
 
     <script src="script/fontawesome-all.js"></script>
     <script src="script/bootstrap.min.js"></script>
     <script src="script/admin.js"></script>
+    <script src="script/jquery-3.6.0.min.js"></script>
 
-    <style>
-        .sb-sidenav-menu-heading {
-            font-size: .9rem !important;
-        }
-
-        .sb-nav-link-icon {
-            padding-left: 10px;
-            color: inherit !important;
-        }
-
-        .pageContent {
-            padding-top: 20px;
-            padding-left: 50px;
-        }
-
-        #user-logout-btn:hover {
-            color: #fff;
-        }
-    </style>
+    <th:block th:replace="${styles}" />
+    <th:block th:replace="${scripts}" />
 </head>
 
 <body class="sb-nav-fixed">

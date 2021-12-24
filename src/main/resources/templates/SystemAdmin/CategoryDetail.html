@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<head th:replace="SystemAdmin/MainTemplate :: common_header(~{::title}, ~{}, ~{::head/script}, ~{::head/style})">
+
     <title>流水帳分類管理</title>
-
-    <link href="stylesheet/admin.css" rel="stylesheet" />
-    <link href="stylesheet/mainTemplate.css" rel="stylesheet" />
-
-    <script src="script/fontawesome-all.js"></script>
-    <script src="script/bootstrap.min.js"></script>
-    <script src="script/admin.js"></script>
-    <script src="script/jquery-3.6.0.min.js"></script>
 
     <style>
         .category-input-div {
@@ -30,18 +18,6 @@
 
         .category-input-div>button {
             margin-left: 60px;
-        }
-
-        .err-msg {
-            width: 100%;
-            margin-top: 0.25rem;
-            font-size: .875em;
-            color: #dc3545;
-        }
-
-        .err-msg-btn {
-            color: #dc3545;
-            display: inline-block;
         }
     </style>
 
@@ -112,22 +88,9 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h5 style="color:#198754">[[${successType}]]成功!</h5>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">確定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
+
+    <div th:replace="SystemAdmin/MainTemplate :: successModal(${successType})"></div>
 
 </body>
 

@@ -60,8 +60,7 @@ public class DefaultLoginController {
     }
 
     @GetMapping("/loginPage")
-    public String LoginPage(Model model, HttpSession session) {
-        model.addAttribute("userLoginDto", new UserLoginDto());
+    public String LoginPage(@ModelAttribute UserLoginDto userLogin, HttpSession session) {
 
         // check login
         if (session.getAttribute("LoginID") != null) {

@@ -34,3 +34,15 @@
 .ucPager-div>nav {
     margin: 0 auto;
 }
+
+.err-msg {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #dc3545;
+}
+
+.err-msg-btn {
+    color: #dc3545;
+    display: inline-block;
+}

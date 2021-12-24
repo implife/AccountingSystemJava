@@ -1,20 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<head th:replace="SystemAdmin/MainTemplate :: common_header(~{::title}, ~{}, ~{}, ~{::head/style})">
+
     <title>會員管理</title>
-
-    <link href="stylesheet/admin.css" rel="stylesheet" />
-    <link href="stylesheet/mainTemplate.css" rel="stylesheet" />
-
-    <script src="script/fontawesome-all.js"></script>
-    <script src="script/bootstrap.min.js"></script>
-    <script src="script/admin.js"></script>
 
     <style>
         .user-table-div {
@@ -30,17 +19,6 @@
 
         td {
             min-width: 65px;
-        }
-
-        .ucPager-div {
-            min-width: 400px;
-            max-width: 75%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .ucPager-div>nav {
-            margin: 0 auto;
         }
     </style>
 </head>

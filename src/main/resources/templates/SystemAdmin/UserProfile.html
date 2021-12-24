@@ -1,20 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<head th:replace="SystemAdmin/MainTemplate :: common_header(~{::title}, ~{}, ~{::head/script}, ~{::head/style})">
+    
     <title>個人資訊</title>
-
-    <link href="stylesheet/admin.css" rel="stylesheet" />
-    <link href="stylesheet/mainTemplate.css" rel="stylesheet" />
-
-    <script src="script/fontawesome-all.js"></script>
-    <script src="script/bootstrap.min.js"></script>
-    <script src="script/admin.js"></script>
 
     <style>
         .input-table-div {
@@ -29,13 +18,29 @@
         th {
             width: 60px;
             text-align: center;
-            padding-top: 14px !important;
         }
 
         td>input {
             max-width: 280px;
         }
     </style>
+
+    <script th:inline="javascript">
+        var SuccessModal;
+        var SuccessModalShow = /*[[${isSuccessModalShow}]]*/ false;
+
+        $(function () {
+            SuccessModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                keyboard: false
+            });
+
+            // 如果事按刪除紐後重新導向回來，跳顯示結果的modal
+            if(SuccessModalShow){
+                SuccessModal.toggle();
+            }
+
+        })
+    </script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -61,23 +66,33 @@
 
                 <!-- Input -->
                 <div class="input-table-div">
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <th scope="row">帳號</th>
-                                <td><input type="text" class="form-control" id="account" name="account"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">姓名</th>
-                                <td><input type="text" class="form-control" id="name" name="name"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Email</th>
-                                <td><input type="text" class="form-control" id="email" name="email"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="button" class="btn btn-outline-primary" id="btnSave">存檔</button>
+                    <form th:action="@{/editUserProfile}" method="post" th:object="${userProfileDto}">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><label for="account" class="col-form-label">帳號</label></th>
+                                    <td><input type="text" class="form-control" id="account" th:value="*{account}" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><label for="name" class="col-form-label">姓名</label></th>
+                                    <td>
+                                        <input type="text" class="form-control" th:field="*{name}">
+                                        <div class="err-msg" th:each="error: ${#fields.errors('name')}" th:text="${error}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><label for="email" class="col-form-label">Email</label></th>
+                                    <td>
+                                        <input type="text" class="form-control" th:field="*{email}">
+                                        <div class="err-msg" th:each="error: ${#fields.errors('email')}" th:text="${error}"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <input type="hidden" th:field="*{userId}" />
+                        <button type="submit" class="btn btn-outline-primary" id="btnSave">存檔</button>
+                        <div class="err-msg-btn" th:if="${databaseAddError != null}" th:text="${databaseAddError}"></div>
+                    </form>
                 </div>
 
             </div>
@@ -86,6 +101,8 @@
 
     <div th:replace="SystemAdmin/MainTemplate :: logoutModal"></div>
 
+    <div th:replace="SystemAdmin/MainTemplate :: successModal(${successType})"></div>
+    
 </body>
 
 </html>
