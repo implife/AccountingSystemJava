@@ -33,14 +33,11 @@ public class UserProfileController {
         
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
-            return "redirect:/loginPage";
-        }
-        Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
-        if(currentUser.isEmpty()){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
         model.addAttribute("isManager", userInfoService.isManager(userId));
+        Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
 
         // 如果userProfileDtoBindingResult存在表示驗證不過重新導向回來
         boolean hasBindingResult = model.containsAttribute("userProfileDtoBindingResult");
@@ -71,14 +68,11 @@ public class UserProfileController {
 
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
 
         Optional<UserInfo> currentUser = userInfoService.getUserById(userId);
-        if(currentUser.isEmpty()){
-            return "redirect:/loginPage";
-        }
 
         userProfileDto.setUserId(currentUser.get().getUserID());
         userProfileDto.setAccount(currentUser.get().getAccount());

@@ -7,5 +7,5 @@ import java.util.UUID;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 
 public interface UserInfoRepository extends JpaRepository<UserInfo,UUID>{
-
+    
 }

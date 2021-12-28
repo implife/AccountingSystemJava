@@ -37,24 +37,21 @@
                 let count = $('tbody th input[type=checkbox]:checked').length;
                 if (count == 0) {
                     $('#btnDelete').prop('disabled', true);
+                    $('#deleteModal-items').text('');
                 }
                 else {
                     $('#btnDelete').prop('disabled', false);
                     let itemStr = '';
-                    let itemStrHidden = '';
 
                     let i = 1;
                     for (let item of $('tbody th input[type=checkbox]:checked')) {
                         itemStr += $(item).parent().parent().siblings('td').eq(1).text();
-                        itemStrHidden += $(item).attr('id').slice(2);
 
                         if (i++ != count) {
                             itemStr += "、";
-                            itemStrHidden += ",";
                         }
                     }
                     $('#deleteModal-items').text(itemStr);
-                    $('#deleteItemsHidden').val(itemStrHidden);
                 }
             })
         })

@@ -46,7 +46,7 @@ public class AccountingController {
         
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
         model.addAttribute("isManager", userInfoService.isManager(userId));
@@ -91,7 +91,7 @@ public class AccountingController {
         
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
         model.addAttribute("isManager", userInfoService.isManager(userId));
@@ -165,7 +165,12 @@ public class AccountingController {
     @PostMapping("/newAccounting")
     public String newAccounting(@Valid @ModelAttribute AccountingInputDto accountingInputDto, 
         BindingResult result, RedirectAttributes redirectAttr) {
-        
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
+
         // 驗證錯誤
         if(result.hasErrors()){
             redirectAttr.addFlashAttribute("accountingInputDtoBindingResult", result);
@@ -197,7 +202,12 @@ public class AccountingController {
 
     @PostMapping("/editAccounting")
     public String editAccounting(@Valid @ModelAttribute AccountingInputDto accountingDto, BindingResult result, RedirectAttributes redirectAttr) {
-        
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
+
         // 驗證錯誤
         if(result.hasErrors()){
             redirectAttr.addFlashAttribute("accountingInputDtoBindingResult", result);
@@ -230,9 +240,14 @@ public class AccountingController {
     // 刪除多筆流水帳按鈕
     @PostMapping("/deleteAccounting")
     public String deleteAccounting(String[] delCheckBoxes, RedirectAttributes redirectAttr) {
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
 
         List<String> errMsg = new ArrayList<>();
-        boolean userSuccess = accountingService.deleteAccountings(delCheckBoxes, (UUID)session.getAttribute("LoginID"), errMsg);
+        boolean userSuccess = accountingService.deleteAccountings(delCheckBoxes, userId, errMsg);
 
         // 將結果做成ErrorCountAndMessageDto再重新導向
         ErrorCountAndMessageDto errCountAndMsg = new ErrorCountAndMessageDto();

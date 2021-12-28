@@ -52,6 +52,7 @@
                 let count = $('tbody th input[type=checkbox]:checked').length;
                 if (count == 0) {
                     $('#btnDelete').prop('disabled', true);
+                    $('#deleteModal-items').text('');
                 }
                 else {
                     $('#btnDelete').prop('disabled', false);

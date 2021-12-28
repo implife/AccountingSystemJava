@@ -1,6 +1,7 @@
 package com.ubayKyu.accountingSystem.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.ubayKyu.accountingSystem.entity.Category;
@@ -20,6 +21,8 @@ public interface CategoryRepository extends JpaRepository<Category,UUID> {
 
     Category findByUserInfoAndCategoryName(UserInfo userInfo, String categoryName);
 
+    long deleteByUserInfo(UserInfo userInfo);
+
     /**
      * 取得特定使用者的分類數量
      * 
@@ -27,6 +30,6 @@ public interface CategoryRepository extends JpaRepository<Category,UUID> {
      * @return count of categories, may be null
      */
     @Query(value = "SELECT COUNT(*) FROM category WHERE user_id = ?1", nativeQuery = true)
-    Integer getCountByUserId(UUID userId);
+    Optional<Integer> getCountByUserId(UUID userId);
 
 }

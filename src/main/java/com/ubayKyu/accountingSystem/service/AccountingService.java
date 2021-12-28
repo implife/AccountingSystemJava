@@ -71,25 +71,30 @@ public class AccountingService {
             return 0;
         }
 
-        Integer result = repository.getCountByUserId(userId);
-        return result == null ? 0 : result;
+        return repository.getCountByUserId(userId).orElse(0);
 
     }
 
     // 該使用者的所有帳目小記
     public int getTotalAmountByUserId(UUID userId){
-        Integer result = repository.getTotalAmountByUserId(userId);
-        return result == null ? 0 : result;
+        if(userId == null){
+            return 0;
+        }
+
+        return repository.getTotalAmountByUserId(userId).orElse(0);
     }
 
     // 該使用者這個月的小記
     public int getTotalAmountThisMonthByUserId(UUID userId){
+        if(userId == null){
+            return 0;
+        }
+
         LocalDate now = LocalDate.now();
         LocalDateTime start = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0, 0);
         LocalDateTime end = LocalDateTime.of(now.getYear(), now.getMonth(), now.getMonth().length(now.isLeapYear()), 23, 59, 59);
 
-        Integer result = repository.getTotalAmountByUserIdAndDate(userId, start, end);
-        return result == null ? 0 : result;
+        return repository.getTotalAmountByUserIdAndDate(userId, start, end).orElse(0);
     }
 
     // 處理分頁
@@ -162,13 +167,13 @@ public class AccountingService {
     }
 
     // 輸入category ID回傳流水帳數量
-    public int getCountOfCategory(UUID uuid){
-        return (int)repository.findAll()
-            .stream()
-            .filter(item -> Optional.ofNullable(item.getCategory())
-                .map(obj -> obj.getCategoryID().equals(uuid))
-                .orElse(false))
-            .count();
+    public int getCountOfCategory(UUID userId, UUID categoryId){
+
+        if(userId == null || categoryId == null){
+            return 0;
+        }
+
+        return repository.getAccountingCountByUserIdAndCategoryId(userId, categoryId).orElse(0);
     }
 
     // 刪除多筆流水帳資料

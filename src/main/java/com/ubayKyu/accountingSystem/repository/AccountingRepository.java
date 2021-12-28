@@ -21,6 +21,8 @@ public interface AccountingRepository extends JpaRepository<Accounting,Integer>{
 
     Optional<Accounting> findByIdAndUserInfo(Integer accountingId, UserInfo userInfo);
 
+    long deleteByUserInfo(UserInfo userInfo);
+
     /**
      * 取得最早的流水帳時間
      * 
@@ -44,7 +46,7 @@ public interface AccountingRepository extends JpaRepository<Accounting,Integer>{
      * @return count of accountings, may be null
      */
     @Query(value = "SELECT COUNT(*) FROM accounting WHERE user_id = ?1", nativeQuery = true)
-    Integer getCountByUserId(UUID userId);
+    Optional<Integer> getCountByUserId(UUID userId);
 
     /**
      * 該使用者的所有帳目金額小記
@@ -53,7 +55,7 @@ public interface AccountingRepository extends JpaRepository<Accounting,Integer>{
      * @return amount of all accountings, may be null when there's no accounting
      */
     @Query(value = "SELECT SUM(amount) FROM accounting WHERE user_id = ?1" , nativeQuery = true)
-    Integer getTotalAmountByUserId(UUID userId);
+    Optional<Integer> getTotalAmountByUserId(UUID userId);
 
     /**
      * 使用者的日期區間的帳目小記
@@ -66,8 +68,17 @@ public interface AccountingRepository extends JpaRepository<Accounting,Integer>{
     @Query(value = "SELECT SUM(amount) FROM accounting " +
         "WHERE user_id = ?1 " + 
         "AND create_date BETWEEN ?2 AND ?3" , nativeQuery = true)
-    Integer getTotalAmountByUserIdAndDate(UUID userId, LocalDateTime startDate, LocalDateTime endDate);
+    Optional<Integer> getTotalAmountByUserIdAndDate(UUID userId, LocalDateTime startDate, LocalDateTime endDate);
 
-
+    /**
+     * 使用 user ID & category ID回傳流水帳數量
+     * 
+     * @param userId must not be null
+     * @param categoryId must not be null
+     * @return count of accountings, may be null when there's no matching accounting
+     */
+    @Query(value = "SELECT COUNT(*) FROM accounting " + 
+        "WHERE user_id = ?1 AND category_id = ?2", nativeQuery = true)
+    Optional<Integer> getAccountingCountByUserIdAndCategoryId(UUID userId, UUID categoryId);
     
 }

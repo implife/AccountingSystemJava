@@ -49,7 +49,7 @@ public class CategoryController {
 
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
         model.addAttribute("isManager", userInfoService.isManager(userId));
@@ -71,7 +71,7 @@ public class CategoryController {
             .getCategoriesByUserIdAndPages(userId, pagination.getCurrentPage(), pagination.getItemSizeInPage())
             .stream()
             .map(item -> new CategoryRowDto(item.getCreateDate(), item.getCategoryName(),
-                accountingService.getCountOfCategory(item.getCategoryID()), item.getCategoryID().toString()))
+                accountingService.getCountOfCategory(userId, item.getCategoryID()), item.getCategoryID().toString()))
             .toList();
 
         model.addAttribute("categoryList", rows);
@@ -89,7 +89,7 @@ public class CategoryController {
 
         // Check Login
         UUID userId = (UUID)session.getAttribute("LoginID");
-        if(userId == null){
+        if(userInfoService.getUserById(userId).isEmpty()){
             return "redirect:/loginPage";
         }
         model.addAttribute("isManager", userInfoService.isManager(userId));
@@ -139,6 +139,12 @@ public class CategoryController {
     // 刪除多筆類別按鈕
     @PostMapping("/deleteCategories")
     public String deleteCategories(String[] delCheckBoxes, RedirectAttributes redirectAttr){
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
+        
         List<String> errMsg = new ArrayList<>();
         boolean userSuccess = categoryService.deleteCategories(delCheckBoxes, (UUID)session.getAttribute("LoginID"), errMsg);
 
@@ -162,6 +168,12 @@ public class CategoryController {
     // 新增一筆類別按鈕
     @PostMapping("/newCategory")
     public String newCategory(@Valid @ModelAttribute CategoryInputDto categoryDto, BindingResult result, RedirectAttributes redirectAttr){
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
+        
         // 驗證錯誤
         if(result.hasErrors()){
             redirectAttr.addFlashAttribute("categoryInputDtoBindingResult", result);
@@ -199,6 +211,11 @@ public class CategoryController {
     // 修改類別按鈕
     @PostMapping("/editCategory")
     public String editCategory(@Valid @ModelAttribute CategoryInputDto categoryDto, BindingResult result, RedirectAttributes redirectAttr){
+        // Check Login
+        UUID userId = (UUID)session.getAttribute("LoginID");
+        if(userInfoService.getUserById(userId).isEmpty()){
+            return "redirect:/loginPage";
+        }
         
         // categoryId不可為null (ID不合法Binding時也會變null)
         if(categoryDto.getCategoryId() == null){

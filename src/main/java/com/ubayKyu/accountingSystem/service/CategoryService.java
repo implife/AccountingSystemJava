@@ -49,8 +49,7 @@ public class CategoryService {
             return 0;
         }
 
-        Integer result = repository.getCountByUserId(userId);
-        return result == null ? 0 : result;
+        return repository.getCountByUserId(userId).orElse(0);
     }
 
     // 利用categoryID(String)取得該類別
