@@ -35,7 +35,7 @@ public class UserInfo {
 	@Column(name = "user_level", nullable=false)
 	private Integer userLevel;
 
-	@Column(name = "create_date", nullable=false, columnDefinition = "datetime")
+	@Column(name = "create_date", nullable=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
 	private LocalDateTime createDate;
 
 	@Column(name = "modify_date", nullable=false, columnDefinition = "datetime")

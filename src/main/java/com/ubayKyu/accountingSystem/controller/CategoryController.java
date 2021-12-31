@@ -107,13 +107,17 @@ public class CategoryController {
             model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "categoryInputDto", result);
         }
 
-        Optional<Category> editCategory = categoryService.getCategoryByCategoryIDStr(userId, categoryId);
+        Optional<Category> editCategory = categoryService.getCategoryByUserIdAndCategoryId(userId, categoryId);
 
         // 編輯模式
         if(editCategory.isPresent()){
+            // 驗證不過導向回來要狀態還原而非填入DB資料
+            if (!hasBindingResult) {
+                categoryDto.setCaption(editCategory.get().getCategoryName());
+                categoryDto.setRemark(editCategory.get().getRemark());
+            }
+            
             categoryDto.setCategoryId(editCategory.get().getCategoryID());
-            categoryDto.setCaption(editCategory.get().getCategoryName());
-            categoryDto.setRemark(editCategory.get().getRemark());
             model.addAttribute("formAction", "/editCategory");
         }
         // 新增模式

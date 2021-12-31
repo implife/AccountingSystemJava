@@ -130,12 +130,16 @@ public class AccountingController {
 
         // 編輯模式
         if(editAccounting.isPresent()){
+            // 驗證不過導向回來要狀態還原而非填入DB資料
+            if (!hasBindingResult) {
+                accountingInputDto.setCaption(editAccounting.get().getCaption());
+                accountingInputDto.setAmount(Math.abs(editAccounting.get().getAmount()));
+                accountingInputDto.setCategoryName(editAccounting.get().getCategory() == null ? null : editAccounting.get().getCategory().getCategoryName());
+                accountingInputDto.setInout(editAccounting.get().getActType() == 0 ? "out" : "in");
+                accountingInputDto.setRemark(editAccounting.get().getRemark());
+            }
+            
             accountingInputDto.setAccountingId(editAccounting.get().getId());
-            accountingInputDto.setCaption(editAccounting.get().getCaption());
-            accountingInputDto.setAmount(Math.abs(editAccounting.get().getAmount()));
-            accountingInputDto.setCategoryName(editAccounting.get().getCategory() == null ? null : editAccounting.get().getCategory().getCategoryName());
-            accountingInputDto.setInout(editAccounting.get().getActType() == 0 ? "out" : "in");
-            accountingInputDto.setRemark(editAccounting.get().getRemark());
             model.addAttribute("formAction", "/editAccounting");
         }
         // 新增模式

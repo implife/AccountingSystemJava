@@ -40,6 +40,7 @@ public class AccountingService {
         return repository.getLastAccountingDateTime();
     }
 
+    // 使用user id取得使用者的流水帳
     public List<Accounting> getAccountingsByUserId(UUID userId) {
         Optional<UserInfo> userInfo = userInfoService.getUserById(userId);
 

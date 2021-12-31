@@ -23,6 +23,7 @@ public class CategoryService {
     @Autowired
     private UserInfoService userInfoService;
 
+    // 利用user ID取得該使用者的所有分類
     public List<Category> getCategoriesByUserID(UUID userId){
         if(userId == null){
             return new ArrayList<Category>();
@@ -30,6 +31,7 @@ public class CategoryService {
         return repository.findByUserInfo(userInfoService.getUserById(userId).get(), Sort.by(Direction.DESC, "createDate"));
     }
 
+    // 使用userId和分類名稱取得該分類
     public Category getCategoryByUserIdAndCategoryName(UUID userId, String categoryName){
         if(userId == null || categoryName == null){
             return null;
@@ -52,29 +54,8 @@ public class CategoryService {
         return repository.getCountByUserId(userId).orElse(0);
     }
 
-    // 利用categoryID(String)取得該類別
-    public Optional<Category> getCategoryByCategoryIDStr(UUID userId, String categoryIdStr){
-        if(categoryIdStr == null){
-            return Optional.empty();
-        }
-
-        String pattern = "\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b";
-
-        // 檢查格式
-        try {
-            if(categoryIdStr.matches(pattern)){
-                return this.getCategoryByuserIdAndCategoryId(userId, UUID.fromString(categoryIdStr));
-            }
-            else{
-                throw new IllegalArgumentException();
-            }
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
-    // 利用使用者ID(驗證用)和類別ID取得該類別
-    public Optional<Category> getCategoryByuserIdAndCategoryId(UUID userId, UUID categoryId){
+    // 利用使用者ID(驗證用)和分類ID取得該分類
+    public Optional<Category> getCategoryByUserIdAndCategoryId(UUID userId, UUID categoryId){
         if(userId == null || categoryId == null){
             return Optional.empty();
         }
@@ -85,6 +66,27 @@ public class CategoryService {
             .findFirst();
     }
 
+    // 利用使用者ID(驗證用)和categoryID(String)取得該分類
+    public Optional<Category> getCategoryByUserIdAndCategoryId(UUID userId, String categoryIdStr){
+        if(userId == null || categoryIdStr == null){
+            return Optional.empty();
+        }
+
+        String pattern = "\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b";
+
+        // 檢查格式
+        try {
+            if(categoryIdStr.matches(pattern)){
+                return this.getCategoryByUserIdAndCategoryId(userId, UUID.fromString(categoryIdStr));
+            }
+            else{
+                throw new IllegalArgumentException();
+            }
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     // 處理分頁
     public List<Category> getCategoriesByUserIdAndPages(UUID userId, int currentPage, int sizeInPage){
         return repository
@@ -92,7 +94,7 @@ public class CategoryService {
             .getContent();
     }
 
-    // 新增一筆類別進資料庫，成功的話回傳該UUID
+    // 新增一筆分類進資料庫，成功的話回傳該UUID
     public UUID addCategory(UUID userId, CategoryInputDto categoryDto, List<String> errMsg){
 
         // check user
@@ -102,12 +104,8 @@ public class CategoryService {
             return null;
         }
 
-        // 類別名稱不可一樣
-        boolean hasTheSame = repository.findAll()
-            .stream()
-            .filter(item -> item.getUserInfo().getUserID().equals(userId) && item.getCategoryName().equals(categoryDto.getCaption()))
-            .findFirst()
-            .isPresent();
+        // 分類名稱不可一樣
+        boolean hasTheSame = repository.findByUserInfoAndCategoryName(currentUser.get(), categoryDto.getCaption()) != null;
         if(hasTheSame){
             errMsg.add("*該名稱已存在");
             return null;
@@ -139,23 +137,18 @@ public class CategoryService {
         }
 
         // check categoryId
-        Optional<Category> targetCategory = this.getCategoryByuserIdAndCategoryId(userId, categoryDto.getCategoryId());
+        Optional<Category> targetCategory = this.getCategoryByUserIdAndCategoryId(userId, categoryDto.getCategoryId());
         if(targetCategory.isEmpty()){
-            errMsg.add("該類別不存在");
+            errMsg.add("該分類不存在");
             return false;
         }
 
-        // 類別名稱不可一樣
-        boolean hasTheSame = repository.findAll()
-            .stream()
-            .filter(item -> item.getUserInfo().getUserID().equals(userId) 
-                && !item.getCategoryID().equals(categoryDto.getCategoryId()) 
-                && item.getCategoryName().equals(categoryDto.getCaption()))
-            .findFirst()
-            .isPresent();
-        if(hasTheSame){
-            errMsg.add("*該名稱已存在");
-            return false;
+        // 分類名稱不可一樣
+        if(!targetCategory.get().getCategoryName().equals(categoryDto.getCaption())){
+            if(repository.findByUserInfoAndCategoryName(currentUser.get(), categoryDto.getCaption()) != null){
+                errMsg.add("*該名稱已存在");
+                return false;
+            }
         }
 
         targetCategory.get().setCategoryName(categoryDto.getCaption());
@@ -172,7 +165,7 @@ public class CategoryService {
 
     }
 
-    // 刪除多筆類別，如果使用者錯誤直接回傳false
+    // 刪除多筆分類，如果使用者錯誤直接回傳false
     public boolean deleteCategories(String[] ids, UUID userId, List<String> errMsg){
 
         // 使用者錯誤回傳false
@@ -224,5 +217,4 @@ public class CategoryService {
 
         return true;
     }
-
 }

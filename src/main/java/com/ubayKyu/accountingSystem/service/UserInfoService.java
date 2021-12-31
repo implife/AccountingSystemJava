@@ -1,5 +1,6 @@
 package com.ubayKyu.accountingSystem.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ubayKyu.accountingSystem.dto.UserInputDto;
 import com.ubayKyu.accountingSystem.dto.UserProfileDto;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.AccountingRepository;
@@ -26,11 +28,12 @@ public class UserInfoService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-
+	// 所有使用者數量
 	public int getTotalCount(){
 		return (int)userInfoRepository.count();
 	}
 
+	// 利用UUID搜尋user
 	public Optional<UserInfo> getUserById(UUID uuid){
 		if(uuid == null){
 			return Optional.empty();
@@ -38,13 +41,33 @@ public class UserInfoService {
 		return userInfoRepository.findById(uuid);
 	}
 
-	public Optional<UserInfo> getUserByAccountPwd(String account, String pwd){
-		return userInfoRepository.findAll()
-			.stream()
-			.filter(item -> item.getAccount().equals(account) && item.getPwd().equals(pwd))
-			.findFirst();
+	// 利用UUID字串搜尋user
+	public Optional<UserInfo> getUserById(String uuidStr){
+		if(uuidStr == null){
+			return Optional.empty();
+		}
+
+        String pattern = "\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b";
+
+        // 檢查格式
+        try {
+            if(uuidStr.matches(pattern)){
+                return this.getUserById(UUID.fromString(uuidStr));
+            }
+            else{
+                throw new IllegalArgumentException();
+            }
+        } catch (Exception e) {
+            return Optional.empty();
+        }
 	}
 
+	// 帳號密碼取得使用者
+	public Optional<UserInfo> getUserByAccountPwd(String account, String pwd){
+		return userInfoRepository.findByAccountAndPwd(account, pwd);
+	}
+
+	// 判斷是否為管理者
 	public boolean isManager(UUID uuid) {
 		return userInfoRepository.findById(uuid)
 			.map(user -> user.getUserLevel() == 0)
@@ -74,6 +97,7 @@ public class UserInfoService {
 
 		currentUser.get().setName(userDto.getName());
 		currentUser.get().setEmail(userDto.getEmail());
+		currentUser.get().setModifyDate(LocalDateTime.now());
 
         try {
             userInfoRepository.save(currentUser.get());
@@ -127,6 +151,70 @@ public class UserInfoService {
 		userInfoRepository.deleteById(userInfo.getUserID());
 
 		return true;
+	}
+
+	/**
+	 * 新增一筆使用者資料進資料庫
+	 * @param userDto 新使用者的DTO
+	 * @param errMsg 錯誤訊息的List
+	 * @return 成功的話回傳新使用者UUID，失敗回傳null
+	 */
+	public UUID addUser(UserInputDto userDto, List<String> errMsg) {
+
+        // 帳號不可一樣
+        if(userInfoRepository.findByAccount(userDto.getAccount()).isPresent()){
+            errMsg.add("*該帳號已存在");
+            return null;
+        }
+
+        UserInfo newUser = new UserInfo();
+		newUser.setAccount(userDto.getAccount());
+		newUser.setName(userDto.getName());
+		newUser.setPwd("12345678");
+		newUser.setUserLevel(userDto.getLevel().equals("manager") ? 0 : 1);
+		newUser.setEmail(userDto.getEmail());
+		newUser.setModifyDate(LocalDateTime.now());
+
+        try {
+
+            return userInfoRepository.save(newUser).getUserID();
+
+        } catch (Exception e) {
+            errMsg.add("資料庫錯誤");
+            return null;
+        }
+	}
+
+    // 編輯使用者
+	public boolean updateUser(UserInfo currentUser, UserInputDto userDto, List<String> errMsg) {
+        // check userId
+        Optional<UserInfo> targetUser = this.getUserById(userDto.getUserId());
+        if(targetUser.isEmpty()){
+            errMsg.add("該使用者不存在");
+            return false;
+        }
+
+		// 管理者人數不可為0
+		if(currentUser.getUserID().equals(userDto.getUserId()) && userDto.getLevel().equals("general")){
+			if(userInfoRepository.getCountOfManager() == 1){
+				errMsg.add("*管理者人數不可為0");
+				return false;	
+			}
+		}
+
+        targetUser.get().setName(userDto.getName());
+        targetUser.get().setEmail(userDto.getEmail());
+        targetUser.get().setUserLevel(userDto.getLevel().equals("manager") ? 0 : 1);
+		targetUser.get().setModifyDate(LocalDateTime.now());
+
+        try {
+            userInfoRepository.save(targetUser.get());
+            return true;
+
+        } catch (Exception e) {
+            errMsg.add("資料庫錯誤");
+            return false;
+        }
 	}
 
 }

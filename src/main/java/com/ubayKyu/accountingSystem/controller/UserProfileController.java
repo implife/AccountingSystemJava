@@ -28,6 +28,7 @@ public class UserProfileController {
     @Autowired
     private HttpSession session;
 
+    // userProfile頁面
     @RequestMapping("/userProfile")
     public String userProfilePage(@ModelAttribute UserProfileDto userProfileDto, Model model) {
         
@@ -62,6 +63,7 @@ public class UserProfileController {
         return "SystemAdmin/UserProfile";
     }
 
+    // 儲存profile按鈕
     @PostMapping("/editUserProfile")
     public String editUserProfile(@Valid @ModelAttribute UserProfileDto userProfileDto, BindingResult result, 
         RedirectAttributes redirectAttr) {

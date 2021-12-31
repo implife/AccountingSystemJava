@@ -22,17 +22,17 @@ public class Category {
     @Column(name = "category_id", insertable = false, updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
     private UUID categoryID;
 
-	@Column(name = "category_name", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
+	@Column(name = "category_name", nullable=false, columnDefinition = "nvarchar(MAX)")
     private String categoryName;
 
-	@Column(name = "create_date", nullable=false, unique=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
+	@Column(name = "create_date", nullable=false, insertable = false, updatable = false, columnDefinition = "datetime default getdate()")
     private LocalDateTime createDate;
 
-	@Column(name = "remark", nullable=false, unique=false, columnDefinition = "nvarchar(MAX)")
+	@Column(name = "remark", nullable=false, columnDefinition = "nvarchar(MAX)")
     private String remark;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private UserInfo userInfo;
 
     public UUID getCategoryID() {
