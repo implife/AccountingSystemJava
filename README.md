@@ -1,6 +1,7 @@
 # AccountingSystemJava
 
 預設管理者：帳號：admin，密碼：12345
+
 預設一般使用者：帳號：Kenny，密碼：12345678
 
 UserInfo_Data.sql：只有Data部分，將檔案內的query複製到user_info的table執行即可。
