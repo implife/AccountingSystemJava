@@ -36,6 +36,7 @@ public class UserManageController {
     @Autowired
     private HttpServletResponse response;
 
+    // 會員列表頁
     @RequestMapping("/userList")
     public String UserListPage(@RequestParam(value = "page", required = false) String currentPageStr,
             @ModelAttribute ErrorCountAndMessageDto errCountMsgDto, Model model) {
@@ -65,12 +66,12 @@ public class UserManageController {
 
         // 取得所在頁資料並做成UserRowDto的List
         List<UserRowDto> rows = userInfoService
-                .getUsersByPages(pagination.getCurrentPage(), pagination.getItemSizeInPage())
-                .stream()
-                .map(item -> new UserRowDto(item.getUserID().toString(), item.getAccount(), item.getName(),
-                        item.getEmail(),
-                        item.getUserLevel() == 0 ? "管理者" : "一般會員", item.getCreateDate()))
-                .toList();
+            .getUsersByPages(pagination.getCurrentPage(), pagination.getItemSizeInPage())
+            .stream()
+            .map(item -> new UserRowDto(item.getUserID().toString(), item.getAccount(), item.getName(),
+                    item.getEmail(),
+                    item.getUserLevel() == 0 ? "管理者" : "一般會員", item.getCreateDate()))
+            .toList();
 
         model.addAttribute("userList", rows);
         model.addAttribute("currentUserId", userId.toString());
